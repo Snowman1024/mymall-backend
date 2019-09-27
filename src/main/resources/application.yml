@@ -1,0 +1,13 @@
+
+spring:
+  application:
+    name: mymall-backend
+  profiles:
+    active: dev
+
+
+
+
+
+
+
