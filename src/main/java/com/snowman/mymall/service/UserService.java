@@ -2,7 +2,6 @@ package com.snowman.mymall.service;
 
 import com.snowman.mymall.entity.UserEntity;
 import com.snowman.mymall.repository.UserRepository;
-import com.snowman.mymall.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
