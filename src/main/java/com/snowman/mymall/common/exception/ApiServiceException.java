@@ -1,4 +1,4 @@
-package com.snowman.mymall.common;
+package com.snowman.mymall.common.exception;
 
 import lombok.Data;
 
@@ -9,30 +9,30 @@ import lombok.Data;
  * @Version 1.0
  **/
 @Data
-public class ApiException extends RuntimeException {
+public class ApiServiceException extends RuntimeException {
 
     private static final long serialVersionUID = -6556202366007238729L;
 
     private String errmsg;
     private int errno = 500;
 
-    public ApiException(String errmsg) {
+    public ApiServiceException(String errmsg) {
         super(errmsg);
         this.errmsg = errmsg;
     }
 
-    public ApiException(String errmsg, Throwable e) {
+    public ApiServiceException(String errmsg, Throwable e) {
         super(errmsg, e);
         this.errmsg = errmsg;
     }
 
-    public ApiException(String errmsg, int errno) {
+    public ApiServiceException(String errmsg, int errno) {
         super(errmsg);
         this.errmsg = errmsg;
         this.errno = errno;
     }
 
-    public ApiException(String errmsg, int errno, Throwable e) {
+    public ApiServiceException(String errmsg, int errno, Throwable e) {
         super(errmsg, e);
         this.errmsg = errmsg;
         this.errno = errno;

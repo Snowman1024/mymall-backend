@@ -1,7 +1,7 @@
 package com.snowman.mymall.repository;
 
 import com.snowman.mymall.entity.UserEntity;
-import com.snowman.mymall.jpa.BaseRepository;
+import com.snowman.mymall.common.jpa.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,4 +15,11 @@ public interface UserRepository extends BaseRepository<UserEntity, String> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM user WHERE id = :userId")
     UserEntity queryByUserId(@Param(value = "userId") Long userId);
+
+    @Query(nativeQuery = true,value = "SELECT * FROM user WHERE mobile = :mobile")
+    UserEntity queryByMobile(@Param(value = "mobile")String mobile);
+
+    @Query(nativeQuery = true,value = "SELECT * FROM user WHERE weixin_openid = :openId")
+    UserEntity queryByOpenId(@Param(value = "openId")String openId);
+
 }

@@ -36,3 +36,38 @@ spring:
     show-sql: true
 
 
+wx:
+  #小程序ID
+  appId: wx0aa1d682756a4f2e
+  #小程序密钥
+  secret: 00e48588e8656e30b25dcf1e1e6a88c0
+  #商户号
+  mchId:
+  #支付签名
+  paySignKey:
+  #交易类型
+  tradeType: JSAPI
+  #证书名称，对应不同的商户号
+  certName: /cert/apiclient_cert.p12
+  #支付回调地址
+  notifyUrl: https://www.yourdomain.com/platform-framework/api/notify
+  #获取code的请求地址
+  codeUrl: https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=STAT#wechat_redirect
+  #获取Web_access_tokenhttps的请求地址
+  webAccessTokenHttps: https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code
+  #拉取用户信息的请求地址
+  userMessageUrl: https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN
+  #微信统一下单接口路径
+  uniformOrderUrl: https://api.mch.weixin.qq.com/pay/unifiedorder
+  #退款地址
+  refundUrl: https://api.mch.weixin.qq.com/secapi/pay/refund
+  #退款查询地址
+  refundQueryUrl: https://api.mch.weixin.qq.com/pay/refundquery
+  #微信查询订单状态
+  orderQueryUrl: https://api.mch.weixin.qq.com/pay/orderquery
+
+ali:
+  webAccessTokenHttps: https://openapi.alipay.com/gateway.do
+  appId:
+  privateKey:
+  pubKey:

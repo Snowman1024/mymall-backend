@@ -1,4 +1,4 @@
-package com.snowman.mymall.annotation;
+package com.snowman.mymall.common.annotation;
 
 import java.lang.annotation.*;
 

@@ -1,7 +1,7 @@
 package com.snowman.mymall.repository;
 
 import com.snowman.mymall.entity.TokenEntity;
-import com.snowman.mymall.jpa.BaseRepository;
+import com.snowman.mymall.common.jpa.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,4 +15,8 @@ public interface TokenRepository extends BaseRepository<TokenEntity, String> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM user_token WHERE token=:token")
     TokenEntity queryByToken(@Param(value = "token") String token);
+
+    @Query(nativeQuery = true,value = "SELECT * FROM user_token WHERE user_id=:userId")
+    TokenEntity queryByUserId(@Param(value = "userId") Long userId);
+
 }

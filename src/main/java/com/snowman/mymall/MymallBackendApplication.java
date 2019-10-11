@@ -1,6 +1,6 @@
 package com.snowman.mymall;
 
-import com.snowman.mymall.jpa.BaseRepositoryFactoryBean;
+import com.snowman.mymall.common.jpa.BaseRepositoryFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

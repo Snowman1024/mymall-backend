@@ -1,7 +1,7 @@
 package com.snowman.mymall.interceptor;
 
-import com.snowman.mymall.annotation.IgnoreAuth;
-import com.snowman.mymall.common.ApiException;
+import com.snowman.mymall.common.annotation.IgnoreAuth;
+import com.snowman.mymall.common.exception.ApiServiceException;
 import com.snowman.mymall.entity.TokenEntity;
 import com.snowman.mymall.service.TokenService;
 import org.apache.commons.lang3.StringUtils;
@@ -60,13 +60,13 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
         //token为空
         if (StringUtils.isBlank(token)) {
-            throw new ApiException("请先登录", 401);
+            throw new ApiServiceException("请先登录", 401);
         }
 
         //查询token信息
         TokenEntity tokenEntity = tokenService.queryByToken(token);
         if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
-            throw new ApiException("token失效，请重新登录", 401);
+            throw new ApiServiceException("token失效，请重新登录", 401);
         }
 
         //设置userId到request里，后续根据userId，获取用户信息

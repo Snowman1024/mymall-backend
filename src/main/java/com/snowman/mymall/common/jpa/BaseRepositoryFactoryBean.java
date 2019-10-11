@@ -1,4 +1,4 @@
-package com.snowman.mymall.jpa;
+package com.snowman.mymall.common.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
