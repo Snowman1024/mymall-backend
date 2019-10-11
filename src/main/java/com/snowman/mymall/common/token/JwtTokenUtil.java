@@ -1,10 +1,12 @@
 package com.snowman.mymall.common.token;
 
-import com.snowman.mymall.common.vo.UserExt;
+import com.snowman.mymall.entity.TokenEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -22,13 +24,30 @@ import java.util.Map;
 public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = 8022581301096173338L;
 
+    private Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
+
     // 密钥
-    private final String SECRET = "MyMall@2019";
-    // token有效时间
-    private final long VALID_TIME = 7200L;
+    private final String SECRET = "MyMall@2019!QAZ";
+    // token有效时间 30天过期
+    public static final long VALID_TIME = 3600 * 24 * 30L;
+
 
     /**
+     * 生成token
      *
+     * @param userId
+     * @return
+     */
+    public String generateToken(Integer userId) {
+        Map<String, Object> claims = new HashMap<>();
+//        claims.put("sub", userVO.getUserName());
+        claims.put("jti", userId);
+
+        claims.put("created", new Date());
+        return generateToken(claims);
+    }
+
+    /**
      * @param claims
      * @return
      */
@@ -40,6 +59,7 @@ public class JwtTokenUtil implements Serializable {
 
     /**
      * 从token中获取数据声明
+     *
      * @param token
      * @return
      */
@@ -54,7 +74,78 @@ public class JwtTokenUtil implements Serializable {
     }
 
     /**
+     * 从token中获取用户id
+     *
+     * @param token
+     * @return
+     */
+    public Integer getUserIdFromToken(String token) {
+        Integer userId = null;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            String userIdStr = claims.getId();
+            if (StringUtils.isNotBlank(userIdStr)) {
+                userId = Integer.valueOf(userIdStr);
+            }
+        } catch (Exception e) {
+            logger.error("从token中获取用户id异常:{}", e);
+            userId = null;
+        }
+        return userId;
+    }
+
+    /**
+     * 判断token是否过期
+     *
+     * @param token
+     * @return
+     */
+    public Boolean isTokenExpired(String token) {
+        try {
+            Claims claims = getClaimsFromToken(token);
+            Date expiration = claims.getExpiration();
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 验证token
+     *
+     * @param token
+     * @param tokenEntity
+     * @return
+     */
+    public Boolean validateToken(String token, TokenEntity tokenEntity) {
+        Integer userId = getUserIdFromToken(token);
+        if (null == userId) {
+            return false;
+        }
+        return (userId.equals(tokenEntity.getUserId()) && !isTokenExpired(token));
+    }
+
+    /**
+     * 刷新token
+     *
+     * @param token
+     * @return
+     */
+    public String refreshToken(String token) {
+        String refreshedToken;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            claims.put("created", new Date());
+            refreshedToken = generateToken(claims);
+        } catch (Exception e) {
+            refreshedToken = null;
+        }
+        return refreshedToken;
+    }
+
+    /**
      * 向已有token添加新属性，并更换新token
+     *
      * @param token
      * @param addClaims
      * @return
@@ -72,79 +163,5 @@ public class JwtTokenUtil implements Serializable {
         }
         claims.put("created", new Date());
         return generateToken(claims);
-    }
-
-    /**
-     * 生成token
-     * @param userDetails
-     * @return
-     */
-    public String generateToken(UserExt userDetails) {
-        Map<String, Object> claims = new HashMap<>(2);
-        claims.put("sub", userDetails.getUsername());
-        claims.put("jti", userDetails.getUserId());
-
-        claims.put("created", new Date());
-        return generateToken(claims);
-    }
-
-    /**
-     * 从token中获取用户名
-     * @param token
-     * @return
-     */
-    public String getUsernameFromToken(String token) {
-        String username;
-        try {
-            Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
-        } catch (Exception e) {
-            username = null;
-        }
-        return username;
-    }
-
-    /**
-     * 判断token是否过期
-     * @param token
-     * @return
-     */
-    public Boolean isTokenExpired(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            Date expiration = claims.getExpiration();
-            return expiration.before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * 刷新token
-     * @param token
-     * @return
-     */
-    public String refreshToken(String token) {
-        String refreshedToken;
-        try {
-            Claims claims = getClaimsFromToken(token);
-            claims.put("created", new Date());
-            refreshedToken = generateToken(claims);
-        } catch (Exception e) {
-            refreshedToken = null;
-        }
-        return refreshedToken;
-    }
-
-    /**
-     * 验证token
-     * @param token
-     * @param userDetails
-     * @return
-     */
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        UserExt user = (UserExt) userDetails;
-        String username = getUsernameFromToken(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
 }

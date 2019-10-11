@@ -17,87 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date 2019/10/8 15:53
  * @Version 1.0
  **/
-@Service
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    public UserVO queryByUserId(Integer userId);
 
-    private BeanCopier copier = BeanCopier.create(UserEntity.class,UserVO.class,false);
+    public UserVO queryByMobile(String mobile);
 
-    /**
-     * 通过id查用户
-     * @param userId
-     * @return
-     */
-    public UserVO queryByUserId(Long userId) {
-        UserEntity entity = userRepository.queryByUserId(userId);
-        if(entity == null){
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        copier.copy(entity,userVO,null);
-        return userVO;
+    public Integer login(String mobile, String password);
 
-    }
+    public UserVO queryByOpenId(String openId);
 
-    /**
-     * 通过手机号查用户
-     * @param mobile
-     * @return
-     */
-    public UserVO queryByMobile(String mobile) {
-        UserEntity entity = userRepository.queryByMobile(mobile);
-        if(entity == null){
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        copier.copy(entity,userVO,null);
-        return userVO;
-    }
+    public void save(UserVO userVo);
 
-    /**
-     * 登陆
-     * @param mobile
-     * @param password
-     * @return
-     */
-    public long login(String mobile, String password) {
-        UserVO user = queryByMobile(mobile);
-        Assert.isNull(user, "手机号或密码错误");
-
-        //密码错误
-        if (!user.getPassWord().equals(DigestUtils.sha256Hex(password))) {
-            throw new ServiceException("手机号或密码错误");
-        }
-
-        return user.getUserId();
-    }
-
-    /**
-     * 通过openId查用户
-     * @param openId
-     * @return
-     */
-    public UserVO queryByOpenId(String openId) {
-        UserEntity entity = userRepository.queryByOpenId(openId);
-        if(entity == null){
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        copier.copy(entity,userVO,null);
-        return userVO;
-    }
-
-    /**
-     * 保存
-     * @param userVo
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void save(UserVO userVo) {
-        UserEntity entity = new UserEntity();
-        BeanCopier entityCopier = BeanCopier.create(UserVO.class,UserEntity.class,false);
-        entityCopier.copy(userVo,entity,null);
-        userRepository.save(entity);
-    }
 }

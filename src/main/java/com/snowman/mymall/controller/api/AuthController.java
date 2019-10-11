@@ -76,7 +76,7 @@ public class AuthController {
         Assert.isBlank(mobile, "手机号不能为空");
         Assert.isBlank(password, "密码不能为空");
         //用户登录
-        long userId = userService.login(mobile, password);
+        Integer userId = userService.login(mobile, password);
         //生成token
         Map<String, Object> map = tokenService.createToken(userId);
 

@@ -148,7 +148,7 @@ public class BaseController {
      *
      * @return 客户端Ip
      */
-    public Long getUserId() {
+    public Integer getUserId() {
         String token = request.getHeader(AuthorizationInterceptor.LOGIN_TOKEN_KEY);
         //查询token信息
         TokenEntity tokenEntity = tokenService.queryByToken(token);

@@ -2,6 +2,7 @@ package com.snowman.mymall.interceptor;
 
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.exception.ApiServiceException;
+import com.snowman.mymall.common.token.JwtTokenUtil;
 import com.snowman.mymall.entity.TokenEntity;
 import com.snowman.mymall.service.TokenService;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     public static final String LOGIN_USER_KEY = "LOGIN_USER_KEY";
     public static final String LOGIN_TOKEN_KEY = "X-Mymall-Token";
@@ -66,6 +69,10 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         //查询token信息
         TokenEntity tokenEntity = tokenService.queryByToken(token);
         if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
+            throw new ApiServiceException("token失效，请重新登录", 401);
+        }
+        Boolean validateFlag = jwtTokenUtil.validateToken(token,tokenEntity);
+        if(!validateFlag){
             throw new ApiServiceException("token失效，请重新登录", 401);
         }
 

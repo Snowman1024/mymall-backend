@@ -43,6 +43,6 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
             return null;
         }
         //获取用户信息
-        return userService.queryByUserId((Long) object);
+        return userService.queryByUserId((Integer) object);
     }
 }

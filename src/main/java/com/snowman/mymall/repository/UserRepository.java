@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends BaseRepository<UserEntity, String> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM user WHERE id = :userId")
-    UserEntity queryByUserId(@Param(value = "userId") Long userId);
+    UserEntity queryByUserId(@Param(value = "userId") Integer userId);
 
     @Query(nativeQuery = true,value = "SELECT * FROM user WHERE mobile = :mobile")
     UserEntity queryByMobile(@Param(value = "mobile")String mobile);

@@ -17,6 +17,6 @@ public interface TokenRepository extends BaseRepository<TokenEntity, String> {
     TokenEntity queryByToken(@Param(value = "token") String token);
 
     @Query(nativeQuery = true,value = "SELECT * FROM user_token WHERE user_id=:userId")
-    TokenEntity queryByUserId(@Param(value = "userId") Long userId);
+    TokenEntity queryByUserId(@Param(value = "userId") Integer userId);
 
 }
