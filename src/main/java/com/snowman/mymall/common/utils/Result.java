@@ -33,18 +33,29 @@ public class Result extends HashMap<String, Object> {
         return r;
     }
 
-    public static Result ok(Map<String, Object> map) {
+    public static Result ok(Object data) {
         Result r = new Result();
-        r.putAll(map);
+        if (null != data) {
+            r.put("data", data);
+        }
+        return r;
+    }
+
+    public static Result ok(String msg, Object data) {
+        Result r = new Result();
+        r.put("msg", msg);
+        if (null != data) {
+            r.put("data", data);
+        }
         return r;
     }
 
     public static Result error() {
-        return error(500, "未知异常，请联系管理员");
+        return error(-1, "未知异常，请联系管理员");
     }
 
     public static Result error(String msg) {
-        return error(500, msg);
+        return error(-1, msg);
     }
 
     public static Result error(int code, String msg) {
@@ -53,9 +64,6 @@ public class Result extends HashMap<String, Object> {
         r.put("msg", msg);
         return r;
     }
-
-
-
 
 
 }

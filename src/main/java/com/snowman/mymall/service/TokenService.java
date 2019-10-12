@@ -25,5 +25,4 @@ public interface TokenService {
 
     public TokenEntity queryByUserId(Integer userId);
 
-    public void save(TokenEntity tokenEntity);
 }

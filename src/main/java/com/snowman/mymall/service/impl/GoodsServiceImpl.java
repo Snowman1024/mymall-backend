@@ -4,6 +4,8 @@ import com.snowman.mymall.common.vo.GoodsVO;
 import com.snowman.mymall.entity.GoodsEntity;
 import com.snowman.mymall.repository.GoodsRepository;
 import com.snowman.mymall.service.GoodsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.List;
 @Service
 public class GoodsServiceImpl implements GoodsService {
 
+    private Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
+
     @Autowired
     private GoodsRepository goodsRepository;
 
@@ -30,6 +34,8 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public List<GoodsVO> queryNewGoodsList() {
+        logger.info("首页查询新商品信息service开始");
+
         List<GoodsVO> goodsVOList = new ArrayList<>();
 
         List<GoodsEntity> goodsEntityList =  goodsRepository.queryNewGoodsList();
@@ -42,6 +48,7 @@ public class GoodsServiceImpl implements GoodsService {
             copier.copy(entity,goodsVO,null);
             goodsVOList.add(goodsVO);
         }
+        logger.info("首页查询新商品信息service结束");
         return goodsVOList;
     }
 }

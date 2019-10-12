@@ -4,8 +4,11 @@ import com.snowman.mymall.common.token.JwtTokenUtil;
 import com.snowman.mymall.entity.TokenEntity;
 import com.snowman.mymall.repository.TokenRepository;
 import com.snowman.mymall.service.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +22,8 @@ import java.util.Map;
  **/
 @Service
 public class TokenServiceImpl implements TokenService {
+
+    private Logger logger = LoggerFactory.getLogger(TokenServiceImpl.class);
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -45,7 +50,9 @@ public class TokenServiceImpl implements TokenService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createToken(Integer userId) {
+        logger.info("生成tokenService开始,userId:{}", userId);
 
         //生成一个token
         String token = jwtTokenUtil.generateToken(userId);
@@ -63,20 +70,19 @@ public class TokenServiceImpl implements TokenService {
             tokenEntity.setUpdateTime(now);
             tokenEntity.setExpireTime(expireTime);
 
-            //保存token
-            save(tokenEntity);
         } else {
             tokenEntity.setToken(token);
             tokenEntity.setUpdateTime(now);
             tokenEntity.setExpireTime(expireTime);
-            //更新token(jpa主键存在则更新)
-            save(tokenEntity);
         }
+        //jpa
+        tokenRepository.save(tokenEntity);
 
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
         map.put("expire", JwtTokenUtil.VALID_TIME);
 
+        logger.info("生成tokenService结束,map:{}", map);
         return map;
     }
 
@@ -91,13 +97,4 @@ public class TokenServiceImpl implements TokenService {
         return tokenRepository.queryByUserId(userId);
     }
 
-    /**
-     * 保存
-     *
-     * @param tokenEntity
-     */
-    @Override
-    public void save(TokenEntity tokenEntity) {
-        tokenRepository.save(tokenEntity);
-    }
 }
