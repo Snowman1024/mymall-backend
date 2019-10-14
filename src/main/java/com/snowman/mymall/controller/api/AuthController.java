@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.utils.IpUtil;
 import com.snowman.mymall.common.utils.Result;
-import com.snowman.mymall.common.vo.LoginVO;
+import com.snowman.mymall.vo.LoginVO;
 import com.snowman.mymall.service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

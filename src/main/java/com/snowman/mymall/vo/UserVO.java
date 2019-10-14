@@ -1,4 +1,4 @@
-package com.snowman.mymall.common.vo;
+package com.snowman.mymall.vo;
 
 import lombok.Data;
 

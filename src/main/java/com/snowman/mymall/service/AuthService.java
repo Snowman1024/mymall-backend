@@ -1,7 +1,7 @@
 package com.snowman.mymall.service;
 
 import com.snowman.mymall.common.utils.Result;
-import com.snowman.mymall.common.vo.LoginVO;
+import com.snowman.mymall.vo.LoginVO;
 
 /**
  * @Description

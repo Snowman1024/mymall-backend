@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
  * @Date 2019/10/8 15:10
  * @Version 1.0
  **/
-public interface TokenRepository extends BaseRepository<TokenEntity, String> {
+public interface TokenRepository extends BaseRepository<TokenEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM user_token WHERE token=:token")
     TokenEntity queryByToken(@Param(value = "token") String token);

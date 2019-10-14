@@ -1,6 +1,6 @@
 package com.snowman.mymall.service;
 
-import com.snowman.mymall.common.vo.BannerVO;
+import com.snowman.mymall.vo.BannerVO;
 
 import java.util.List;
 

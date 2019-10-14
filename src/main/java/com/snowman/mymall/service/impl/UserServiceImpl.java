@@ -1,7 +1,7 @@
 package com.snowman.mymall.service.impl;
 
 import com.snowman.mymall.common.exception.ServiceException;
-import com.snowman.mymall.common.vo.UserVO;
+import com.snowman.mymall.vo.UserVO;
 import com.snowman.mymall.entity.UserEntity;
 import com.snowman.mymall.repository.UserRepository;
 import com.snowman.mymall.service.UserService;

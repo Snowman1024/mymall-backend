@@ -1,6 +1,6 @@
 package com.snowman.mymall.service.impl;
 
-import com.snowman.mymall.common.vo.BannerVO;
+import com.snowman.mymall.vo.BannerVO;
 import com.snowman.mymall.entity.BannerEntity;
 import com.snowman.mymall.repository.BannerRepository;
 import com.snowman.mymall.service.BannerService;

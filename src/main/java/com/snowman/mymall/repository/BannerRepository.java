@@ -12,7 +12,7 @@ import java.util.List;
  * @Date 2019/10/12 15:42
  * @Version 1.0
  **/
-public interface BannerRepository extends BaseRepository<BannerEntity, String> {
+public interface BannerRepository extends BaseRepository<BannerEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM banner WHERE enabled=1" +
             " ORDER BY id DESC ")

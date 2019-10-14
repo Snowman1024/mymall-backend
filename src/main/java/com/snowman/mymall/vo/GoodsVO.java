@@ -1,10 +1,11 @@
-package com.snowman.mymall.common.vo;
+package com.snowman.mymall.vo;
 
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description
@@ -95,4 +96,10 @@ public class GoodsVO implements Serializable {
     // 冗余
     // 产品Id
     private Integer productId;
+
+
+    private String sort;
+    private String order;
+
+    private List<Integer> categoryIdList;
 }

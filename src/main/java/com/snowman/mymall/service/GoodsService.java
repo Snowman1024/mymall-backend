@@ -1,16 +1,10 @@
 package com.snowman.mymall.service;
 
-import com.snowman.mymall.common.vo.GoodsVO;
-import com.snowman.mymall.entity.GoodsEntity;
-import com.snowman.mymall.repository.GoodsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.vo.GoodsVO;
+import com.snowman.mymall.vo.UserVO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description
@@ -21,5 +15,7 @@ import java.util.Map;
 public interface GoodsService {
 
     public List<GoodsVO> queryNewGoodsList();
+
+    public Result list(UserVO loginUser, GoodsVO goodsVO, Integer pageNum, Integer pageSize);
 
 }

@@ -1,6 +1,6 @@
 package com.snowman.mymall.service;
 
-import com.snowman.mymall.common.vo.UserVO;
+import com.snowman.mymall.vo.UserVO;
 
 /**
  * @Description

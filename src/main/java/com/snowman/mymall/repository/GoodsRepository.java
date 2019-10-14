@@ -12,7 +12,7 @@ import java.util.List;
  * @Date 2019/10/11 15:05
  * @Version 1.0
  **/
-public interface GoodsRepository extends BaseRepository<GoodsEntity, String> {
+public interface GoodsRepository extends BaseRepository<GoodsEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE is_delete=0 AND is_new=1 " +
             " ORDER BY id DESC ")
