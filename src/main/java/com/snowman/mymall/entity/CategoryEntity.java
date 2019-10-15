@@ -43,15 +43,15 @@ public class CategoryEntity implements Serializable {
     private Integer parentId;
 
     //排序
-    @Column(name = "sort_order")
+    @Column(name = "sort_order",columnDefinition = "smallint")
     private Integer sortOrder;
 
     //首页展示
-    @Column(name = "show_index")
+    @Column(name = "show_index",columnDefinition = "smallint")
     private Integer showIndex;
 
     //显示
-    @Column(name = "is_show")
+    @Column(name = "is_show",columnDefinition = "smallint")
     private Integer isShow;
 
     //banner图片

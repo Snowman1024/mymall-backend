@@ -1,5 +1,6 @@
 package com.snowman.mymall.controller.api;
 
+import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.redis.RedisService;
 import com.snowman.mymall.common.utils.Result;
@@ -43,9 +44,8 @@ public class IndexController {
     @Autowired
     private BannerService bannerService;
 
-    public static final String NEW_GOODS_KEY = "new_goods_list";
 
-    public static final String BANNER_KEY = "banner_list";
+
 
     /**
      * 测试
@@ -67,11 +67,12 @@ public class IndexController {
         logger.info("首页查询新商品信息controller开始");
         Result result;
         try {
-            List<GoodsVO> newGoodsList = (List<GoodsVO>) redisService.getValue(NEW_GOODS_KEY);
+
+            List<GoodsVO> newGoodsList = (List<GoodsVO>) redisService.getValue(Constant.NEW_GOODS_KEY);
 
             if (CollectionUtils.isEmpty(newGoodsList)) {
                 newGoodsList = goodsService.queryNewGoodsList();
-                redisService.setValue(NEW_GOODS_KEY, newGoodsList);
+                redisService.setValue(Constant.NEW_GOODS_KEY, newGoodsList, Constant.CACHE_VALID_TIME);
             }
 
             Map<String, Object> resultObj = new HashMap<>();
@@ -97,11 +98,11 @@ public class IndexController {
         logger.info("首页查询banner信息controller开始");
         Result result;
         try {
-            List<BannerVO> bannerVOList = (List<BannerVO>) redisService.getValue(BANNER_KEY);
+            List<BannerVO> bannerVOList = (List<BannerVO>) redisService.getValue(Constant.BANNER_KEY);
 
             if (CollectionUtils.isEmpty(bannerVOList)) {
                 bannerVOList = bannerService.queryBannerList();
-                redisService.setValue(BANNER_KEY, bannerVOList);
+                redisService.setValue(Constant.BANNER_KEY, bannerVOList,Constant.CACHE_VALID_TIME);
             }
 
             Map<String, Object> resultObj = new HashMap<>();

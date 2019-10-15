@@ -1,8 +1,10 @@
 package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
+import com.snowman.mymall.common.utils.IpUtil;
 import com.snowman.mymall.common.utils.Result;
 import com.snowman.mymall.service.GoodsService;
 import com.snowman.mymall.service.SearchHistoryService;
@@ -50,7 +52,7 @@ public class GoodsController {
         Map bannerInfo = new HashMap();
         bannerInfo.put("url", "");
         bannerInfo.put("name", "大家都在买的严选好物");
-        bannerInfo.put("img_url", "https://platform-wxmall.oss-cn-beijing.aliyuncs.com/upload/20180727/1504208321fef4.png");
+        bannerInfo.put("imgUrl", Constant.HOST_URL + "/image/goodshot.png");
         resultObj.put("bannerInfo", bannerInfo);
         return Result.ok(resultObj);
     }
@@ -58,6 +60,7 @@ public class GoodsController {
 
     /**
      * 获取商品列表
+     *
      * @param loginUser
      * @param goodsVO
      * @param pageNum
@@ -75,8 +78,8 @@ public class GoodsController {
                        @RequestParam(value = "page", defaultValue = "1") Integer pageNum,
                        @RequestParam(value = "size", defaultValue = "10") Integer pageSize) {
         logger.info("获取商品列表controller开始,loginUser:{},goodsVO:{},pageNum:{},pageSize:{}",
-                JSON.toJSONString(loginUser),JSON.toJSONString(goodsVO), pageNum, pageSize);
-        if(null == goodsVO){
+                JSON.toJSONString(loginUser), JSON.toJSONString(goodsVO), pageNum, pageSize);
+        if (null == goodsVO) {
             logger.error("获取商品列表controller参数异常");
             return Result.error("参数异常");
         }

@@ -87,7 +87,7 @@ public class GoodsServiceImpl implements GoodsService {
                 JSON.toJSONString(loginUser), JSON.toJSONString(goodsVO), pageNum, pageSize);
         //
         Map<String, Object> goodsConditionMap = goodsCondition(goodsVO);
-        StringBuffer jsql = new StringBuffer("select categoryId ");
+        StringBuffer jsql = new StringBuffer("select g ");
         jsql.append((String) goodsConditionMap.get("jsql"));
         Map<String, Object> queryMap = (Map<String, Object>) goodsConditionMap.get("queryMap");
 
@@ -147,20 +147,20 @@ public class GoodsServiceImpl implements GoodsService {
         queryMap = (Map<String, Object>) goodsConditionMap.get("queryMap");
 
         Object[] objArr = goodsRepository.exeQueryCustNameParm(goodsCountJsql.toString(), queryMap).toArray();
-        Integer totalCount = (Integer)objArr[0];
+        Long totalCount = (Long)objArr[0];
         PageUtils goodsData = null;
         if(null != totalCount && totalCount>0){
 
-            StringBuffer goodsJsql = new StringBuffer("select id, name, listPicUrl, marketPrice, retailPrice, goodsBrief ");
+            StringBuffer goodsJsql = new StringBuffer("select g ");
             goodsJsql.append((String) goodsConditionMap.get("jsql"));
             List<GoodsEntity> goodsList = goodsRepository.exeQueryCustNameParm(goodsJsql.toString(), queryMap, pageNum, pageSize);
 
-            goodsData = new PageUtils(goodsList, totalCount, pageSize, pageNum);
+            goodsData = new PageUtils(goodsList, totalCount.intValue(), pageSize, pageNum);
 
             //搜索到的商品
             for (CategoryVO categoryVO : filterCategory) {
-                if (null != categoryId && (categoryVO.getId() == 0 || categoryId.equals(categoryVO.getId()))
-                        || null == categoryId && null == categoryVO.getId()) {
+                if ((null != categoryId && (categoryVO.getId() == 0 || categoryId.equals(categoryVO.getId())))
+                        || (null == categoryId && null == categoryVO.getId())) {
                     categoryVO.setChecked(true);
                 } else {
                     categoryVO.setChecked(false);
@@ -190,37 +190,39 @@ public class GoodsServiceImpl implements GoodsService {
         List<Integer> categoryIdList = goodsVO.getCategoryIdList();
 
         Map<String, Object> queryMap = new HashMap<>();
-        StringBuffer jsql = new StringBuffer(" from GoodsEntity where isDelete=0 and isOnSale=1 ");
+        StringBuffer jsql = new StringBuffer(" from GoodsEntity g where g.isDelete=0 and g.isOnSale=1 ");
         if (null != isNew) {
-            jsql.append(" and isNew = :isNew");
+            jsql.append(" and g.isNew = :isNew");
             queryMap.put("isNew", isNew);
         }
         if (null != isHot) {
-            jsql.append(" and isHot = :isHot");
+            jsql.append(" and g.isHot = :isHot");
             queryMap.put("isHot", isHot);
         }
         if (null != brandId) {
-            jsql.append(" and brandId = :brandId");
+            jsql.append(" and g.brandId = :brandId");
             queryMap.put("brandId", brandId);
         }
         if (StringUtils.isNotBlank(name)) {
-            jsql.append(" and name like :name");
+            jsql.append(" and g.name like :name");
             queryMap.put("name", "%" + name + "%");
         }
         if (!CollectionUtils.isEmpty(categoryIdList)) {
-            jsql.append(" and categoryId in (:categoryId)");
+            jsql.append(" and g.categoryId in (:categoryId)");
             queryMap.put("categoryId", categoryIdList);
         }
         if (StringUtils.isNotBlank(keywords)) {
-            jsql.append(" and keywords like :keywords");
+            jsql.append(" and g.keywords like :keywords");
             queryMap.put("keywords", "%" + keywords + "%");
         }
-        if (StringUtils.isNotBlank(order) && StringUtils.isNotBlank(sort)) {
-            jsql.append(" order by :order :sort");
-            queryMap.put("order", order);
-            queryMap.put("sort", sort);
+        if (StringUtils.isNotBlank(sort) && sort.equals("price")) {
+            if(order.equalsIgnoreCase("asc")){
+                jsql.append(" order by g.retailPrice asc");
+            }else{
+                jsql.append(" order by g.retailPrice desc");
+            }
         } else {
-            jsql.append(" order by id desc");
+            jsql.append(" order by g.id desc");
         }
         Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("jsql", jsql.toString());

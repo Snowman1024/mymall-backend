@@ -1,5 +1,6 @@
 package com.snowman.mymall.config;
 
+import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.redis.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,8 @@ public class InitRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         try{
-            redisService.setValue("111","你好111");
+            redisService.remove(Constant.NEW_GOODS_KEY);
+            redisService.remove(Constant.BANNER_KEY);
 
         }catch (Exception e){
             logger.error("InitRunner error:{}",e);
