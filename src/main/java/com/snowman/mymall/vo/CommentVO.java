@@ -3,6 +3,7 @@ package com.snowman.mymall.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class CommentVO implements Serializable {
     private String content;
 
     //记录时间
-    private Long addTime;
+    private Date addTime;
 
     //状态 是否被管理员批准显示;1是;0未批准显示
     private Integer status;

@@ -354,21 +354,52 @@ public class GoodsServiceImpl implements GoodsService {
         comment.put("count", commentCount);
         comment.put("data", commentInfo);
         //当前用户是否收藏
-        Integer userHasCollect = collectService.queryTotal(userId, goodsId, typeId);
-        if (userHasCollect > 0) {
-            userHasCollect = 1;
+        Integer userHasCollect = 0;
+        if(null != userId){
+            userHasCollect = collectService.queryTotal(userId, goodsId, typeId);
+            if (userHasCollect > 0) {
+                userHasCollect = 1;
+            }
+
+            //记录用户的足迹
+            UserFootprintEntity footprintEntity = new UserFootprintEntity();
+            footprintEntity.setUserId(userId);
+            footprintEntity.setGoodsId(goodsEntity.getId());
+            footprintEntity.setAddTime(new Date());
+            if (null != referrer) {
+                footprintEntity.setReferrer(referrer);
+            } else {
+                footprintEntity.setReferrer(0);
+            }
+            userFootprintService.save(footprintEntity);
+
+            // 记录推荐人是否可以领取红包，用户登录时校验
+            try {
+                // 是否已经有可用的转发红包
+                List<CouponVO> enableCouponList = couponService.queryUserCoupons(userId, CouponSentType.GOOD_TRANFER.getKey());
+                if (CollectionUtils.isEmpty(enableCouponList) && null != referrer ) {
+                    // 获取优惠信息
+                    List<CouponVO> couponList = couponService.queryCouponBySendType(CouponSentType.GOOD_TRANFER.getKey());
+                    if (!CollectionUtils.isEmpty(couponList)) {
+                        CouponVO couponVo = couponList.get(0); //TODO
+                        Integer footprintNum = userFootprintService.queryTotalByGoodsId(goodsId, referrer);
+                        if (null != footprintNum && null != couponVo.getMinTransmitNum()
+                                && footprintNum > couponVo.getMinTransmitNum()) {
+                            UserCouponEntity userCoupon = new UserCouponEntity();
+                            userCoupon.setCouponId(couponVo.getId());
+                            userCoupon.setCouponNo(CharUtil.getRandomString(12));
+                            userCoupon.setUserId(userId);
+                            userCoupon.setAddTime(new Date());
+                            userCoupon.setCouponStatus(CouponStatus.USUSE.getKey());
+                            userCouponService.save(userCoupon);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("记录推荐人是否可以领取红包异常:goodsId:{},userId:{},referrer:{},异常信息:{}",
+                        goodsId, userId, referrer, e);
+            }
         }
-        //记录用户的足迹
-        UserFootprintEntity footprintEntity = new UserFootprintEntity();
-        footprintEntity.setUserId(userId);
-        footprintEntity.setGoodsId(goodsEntity.getId());
-        footprintEntity.setAddTime(new Date());
-        if (null != referrer) {
-            footprintEntity.setReferrer(referrer);
-        } else {
-            footprintEntity.setReferrer(0);
-        }
-        userFootprintService.save(footprintEntity);
         //
         Map<String, Object> resultObj = new HashMap();
         resultObj.put("info", goodsEntity);
@@ -380,32 +411,6 @@ public class GoodsServiceImpl implements GoodsService {
         resultObj.put("brand", brand);
         resultObj.put("specificationList", specificationList);
         resultObj.put("productList", productList);
-        // 记录推荐人是否可以领取红包，用户登录时校验
-        try {
-            // 是否已经有可用的转发红包
-            List<CouponVO> enableCouponList = couponService.queryUserCoupons(userId, CouponSentType.GOOD_TRANFER.getKey());
-            if (CollectionUtils.isEmpty(enableCouponList) && null != referrer && null != userId) {
-                // 获取优惠信息
-                List<CouponVO> couponList = couponService.queryCouponBySendType(CouponSentType.GOOD_TRANFER.getKey());
-                if (!CollectionUtils.isEmpty(couponList)) {
-                    CouponVO couponVo = couponList.get(0); //TODO
-                    Integer footprintNum = userFootprintService.queryTotalByGoodsId(goodsId, referrer);
-                    if (null != footprintNum && null != couponVo.getMinTransmitNum()
-                            && footprintNum > couponVo.getMinTransmitNum()) {
-                        UserCouponEntity userCoupon = new UserCouponEntity();
-                        userCoupon.setCouponId(couponVo.getId());
-                        userCoupon.setCouponNo(CharUtil.getRandomString(12));
-                        userCoupon.setUserId(userId);
-                        userCoupon.setAddTime(new Date());
-                        userCoupon.setCouponStatus(CouponStatus.USUSE.getKey());
-                        userCouponService.save(userCoupon);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.error("记录推荐人是否可以领取红包异常:goodsId:{},userId:{},referrer:{},异常信息:{}",
-                    goodsId, userId, referrer, e);
-        }
 
         return resultObj;
     }

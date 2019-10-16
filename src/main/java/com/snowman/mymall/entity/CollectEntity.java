@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description
@@ -33,10 +34,10 @@ public class CollectEntity implements Serializable {
 
     //添加时间
     @Column(name = "add_time")
-    private Long addTime;
+    private Date addTime;
 
     //是否是关注
-    @Column(name = "is_attention",columnDefinition = "tinyint")
+    @Column(name = "is_attention",columnDefinition = "smallint")
     private Integer isAttention;
 
     //用户收藏的类型;0是商品,1文章

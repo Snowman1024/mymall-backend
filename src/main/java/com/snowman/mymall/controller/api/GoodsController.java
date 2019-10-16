@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
+import com.snowman.mymall.common.token.JwtTokenUtil;
 import com.snowman.mymall.common.utils.Result;
 import com.snowman.mymall.entity.TokenEntity;
 import com.snowman.mymall.interceptor.AuthorizationInterceptor;
@@ -15,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ public class GoodsController {
 
     @Autowired
     private TokenService tokenService;
+
 
     /**
      * 　　人气推荐
@@ -134,6 +137,9 @@ public class GoodsController {
      */
     public Integer getUserId(HttpServletRequest request) {
         String token = request.getHeader(AuthorizationInterceptor.LOGIN_TOKEN_KEY);
+        if(StringUtils.isBlank(token)){
+            return null;
+        }
         //查询token信息
         TokenEntity tokenEntity = tokenService.queryByToken(token);
         if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {

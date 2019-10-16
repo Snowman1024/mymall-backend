@@ -32,6 +32,6 @@ public class CommentPictureEntity implements Serializable {
     private String picUrl;
 
     //排序
-    @Column(name = "sort_order",columnDefinition = "tinyint")
+    @Column(name = "sort_order",columnDefinition = "smallint")
     private Integer sortOrder;
 }

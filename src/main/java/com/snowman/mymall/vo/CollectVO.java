@@ -3,6 +3,7 @@ package com.snowman.mymall.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description
@@ -24,7 +25,7 @@ public class CollectVO implements Serializable {
     private Integer valueId;
 
     //添加时间
-    private Long addTime;
+    private Date addTime;
 
     //是否是关注
     private Integer isAttention;

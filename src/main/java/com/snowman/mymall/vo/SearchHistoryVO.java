@@ -3,6 +3,7 @@ package com.snowman.mymall.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description
@@ -22,7 +23,7 @@ public class SearchHistoryVO implements Serializable{
     //搜索来源，如PC、小程序、APP等
     private String from;
     //搜索时间
-    private Long addTime;
+    private Date addTime;
     //会员Id
     private String userId;
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description
@@ -24,7 +25,7 @@ public class CommentEntity implements Serializable {
     private Integer id;
 
     //用户评论的类型;0评论的是商品,1评论的是文章
-    @Column(name = "type_id",columnDefinition = "tinyint")
+    @Column(name = "type_id",columnDefinition = "smallint")
     private Integer typeId;
 
     //产品Id
@@ -37,10 +38,10 @@ public class CommentEntity implements Serializable {
 
     //记录时间
     @Column(name = "add_time")
-    private Long addTime;
+    private Date addTime;
 
     //状态 是否被管理员批准显示;1是;0未批准显示
-    @Column(name = "status",columnDefinition = "tinyint")
+    @Column(name = "status",columnDefinition = "smallint")
     private Integer status;
 
     //会员Id

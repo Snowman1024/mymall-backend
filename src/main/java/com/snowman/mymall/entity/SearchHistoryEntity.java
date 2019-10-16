@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description
@@ -32,7 +33,7 @@ public class SearchHistoryEntity implements Serializable {
 
     //搜索时间
     @Column(name = "add_time")
-    private Long addTime;
+    private Date addTime;
 
     //会员Id
     @Column(name = "user_id")
