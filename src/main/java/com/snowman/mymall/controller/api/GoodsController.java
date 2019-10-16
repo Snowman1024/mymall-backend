@@ -4,10 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
-import com.snowman.mymall.common.utils.IpUtil;
 import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.entity.TokenEntity;
+import com.snowman.mymall.interceptor.AuthorizationInterceptor;
 import com.snowman.mymall.service.GoodsService;
-import com.snowman.mymall.service.SearchHistoryService;
+import com.snowman.mymall.service.TokenService;
 import com.snowman.mymall.vo.GoodsVO;
 import com.snowman.mymall.vo.UserVO;
 import io.swagger.annotations.Api;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +42,9 @@ public class GoodsController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 　　人气推荐
@@ -93,6 +98,48 @@ public class GoodsController {
         }
         logger.info("获取商品列表controller结束");
         return result;
+    }
+
+    /**
+     * 商品详情
+     */
+    @ApiOperation(value = " 商品详情")
+    @ApiImplicitParams({@ApiImplicitParam(name = "id", value = "商品id", paramType = "path", required = true),
+            @ApiImplicitParam(name = "referrer", value = "商品referrer", paramType = "path", required = false)})
+    @PostMapping(value = "detail")
+    public Object detail(Integer id, Integer referrer, HttpServletRequest request) {
+        logger.info("商品详情controller开始,id:{},referrer:{}");
+        if (null == id) {
+            logger.error("商品详情controller参数异常");
+            return Result.error("参数异常");
+        }
+        Result result;
+        try {
+            Integer userId = getUserId(request);
+            Map<String, Object> resultObj = goodsService.detail(userId, id, referrer);
+            result = Result.ok(resultObj);
+        } catch (Exception e) {
+            logger.error("商品详情controller异常:{}", e);
+            return Result.error(e.toString());
+        }
+        return result;
+
+
+    }
+
+    /**
+     * 获取请求的用户Id
+     *
+     * @return 客户端Ip
+     */
+    public Integer getUserId(HttpServletRequest request) {
+        String token = request.getHeader(AuthorizationInterceptor.LOGIN_TOKEN_KEY);
+        //查询token信息
+        TokenEntity tokenEntity = tokenService.queryByToken(token);
+        if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
+            return null;
+        }
+        return tokenEntity.getUserId();
     }
 
 }

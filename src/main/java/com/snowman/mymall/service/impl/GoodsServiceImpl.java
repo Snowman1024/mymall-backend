@@ -1,19 +1,15 @@
 package com.snowman.mymall.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.snowman.mymall.common.enumeration.CouponSentType;
+import com.snowman.mymall.common.enumeration.CouponStatus;
 import com.snowman.mymall.common.enumeration.SearchFrom;
-import com.snowman.mymall.common.utils.PageUtils;
-import com.snowman.mymall.common.utils.Result;
-import com.snowman.mymall.entity.CategoryEntity;
-import com.snowman.mymall.entity.GoodsEntity;
-import com.snowman.mymall.entity.SearchHistoryEntity;
+import com.snowman.mymall.common.utils.*;
+import com.snowman.mymall.entity.*;
 import com.snowman.mymall.repository.CategotyRepository;
 import com.snowman.mymall.repository.GoodsRepository;
-import com.snowman.mymall.service.GoodsService;
-import com.snowman.mymall.service.SearchHistoryService;
-import com.snowman.mymall.vo.CategoryVO;
-import com.snowman.mymall.vo.GoodsVO;
-import com.snowman.mymall.vo.UserVO;
+import com.snowman.mymall.service.*;
+import com.snowman.mymall.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description
@@ -47,6 +40,45 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private CategotyRepository categotyRepository;
+
+    @Autowired
+    private GoodsSpecificationService goodsSpecificationService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private GoodsGalleryService goodsGalleryService;
+
+    @Autowired
+    private AttributeService attributeService;
+
+    @Autowired
+    private GoodsIssueService goodsIssueService;
+
+    @Autowired
+    private BrandService brandService;
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CommentPictureService commentPictureService;
+
+    @Autowired
+    private CollectService collectService;
+
+    @Autowired
+    private UserFootprintService userFootprintService;
+
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private UserCouponService userCouponService;
 
     /**
      * @return
@@ -147,9 +179,9 @@ public class GoodsServiceImpl implements GoodsService {
         queryMap = (Map<String, Object>) goodsConditionMap.get("queryMap");
 
         Object[] objArr = goodsRepository.exeQueryCustNameParm(goodsCountJsql.toString(), queryMap).toArray();
-        Long totalCount = (Long)objArr[0];
+        Long totalCount = (Long) objArr[0];
         PageUtils goodsData = null;
-        if(null != totalCount && totalCount>0){
+        if (null != totalCount && totalCount > 0) {
 
             StringBuffer goodsJsql = new StringBuffer("select g ");
             goodsJsql.append((String) goodsConditionMap.get("jsql"));
@@ -216,9 +248,9 @@ public class GoodsServiceImpl implements GoodsService {
             queryMap.put("keywords", "%" + keywords + "%");
         }
         if (StringUtils.isNotBlank(sort) && sort.equals("price")) {
-            if(order.equalsIgnoreCase("asc")){
+            if (order.equalsIgnoreCase("asc")) {
                 jsql.append(" order by g.retailPrice asc");
-            }else{
+            } else {
                 jsql.append(" order by g.retailPrice desc");
             }
         } else {
@@ -248,4 +280,135 @@ public class GoodsServiceImpl implements GoodsService {
         searchHistory.setFrom(SearchFrom.MINIPROGRAM.getKey());
         searchHistoryService.saveSearchHistory(searchHistory);
     }
+
+
+    /**
+     * 商品详情
+     *
+     * @param userId
+     * @param goodsId
+     * @param referrer
+     * @return
+     */
+    @Override
+    public Map<String, Object> detail(Integer userId, Integer goodsId, Integer referrer) {
+
+        //查商品
+        GoodsEntity goodsEntity = goodsRepository.queryById(goodsId);
+        //查规格
+        List<GoodsSpecificationVO> goodsSpecificationVOList = goodsSpecificationService.queryByGoodsId(goodsId);
+
+        List<Map> specificationList = new ArrayList();
+        //按规格名称分组
+        for (int i = 0; i < goodsSpecificationVOList.size(); i++) {
+            GoodsSpecificationVO specItem = goodsSpecificationVOList.get(i);
+            //
+            List<GoodsSpecificationVO> tempList = null;
+            for (int j = 0; j < specificationList.size(); j++) {
+                if (specificationList.get(j).get("specification_id").equals(specItem.getSpecificationId())) {
+                    tempList = (List<GoodsSpecificationVO>) specificationList.get(j).get("valueList");
+                    break;
+                }
+            }
+            //
+            if (null == tempList) {
+                Map temp = new HashMap();
+                temp.put("specification_id", specItem.getSpecificationId());
+                temp.put("name", specItem.getName());
+                tempList = new ArrayList();
+                tempList.add(specItem);
+                temp.put("valueList", tempList);
+                specificationList.add(temp);
+            } else {
+                tempList.add(specItem);
+            }
+        }
+
+        //查产品信息
+        List<ProductVO> productList = productService.queryByGoodsId(goodsId);
+        //
+        List<GoodsGalleryVO> galleryList = goodsGalleryService.queryByGoodsId(goodsId);
+        //属性
+        List<AttributeVO> attributeList = attributeService.queryByGoodsId(goodsId);
+        //
+        List<GoodsIssueVO> issueList = goodsIssueService.queryGoodsIssueList();
+        //品牌
+        BrandVO brand = brandService.queryById(goodsEntity.getBrandId());
+        //查评论
+        Integer typeId = 0;
+        Integer commentCount = commentService.queryTotal(typeId, goodsId);
+        List<CommentVO> hotComment = commentService.queryByTypeIdAndValueId(typeId, goodsId);
+
+        Map commentInfo = new HashMap();
+        if (null != hotComment && hotComment.size() > 0) {
+            UserVO commentUser = userService.queryByUserId(hotComment.get(0).getUserId());
+            commentInfo.put("content", Base64Util.decode(hotComment.get(0).getContent()));
+            commentInfo.put("addTime", DateUtils.timeToStr(hotComment.get(0).getAddTime(), DateUtils.DATE_PATTERN));
+            commentInfo.put("nickname", commentUser.getNickName());
+            commentInfo.put("avatar", commentUser.getAvatar());
+            Integer commentId = hotComment.get(0).getId();
+            List<CommentPictureVO> commentPictureList = commentPictureService.queryByComementId(commentId);
+            commentInfo.put("picList", commentPictureList);
+        }
+        Map comment = new HashMap();
+        comment.put("count", commentCount);
+        comment.put("data", commentInfo);
+        //当前用户是否收藏
+        Integer userHasCollect = collectService.queryTotal(userId, goodsId, typeId);
+        if (userHasCollect > 0) {
+            userHasCollect = 1;
+        }
+        //记录用户的足迹
+        UserFootprintEntity footprintEntity = new UserFootprintEntity();
+        footprintEntity.setUserId(userId);
+        footprintEntity.setGoodsId(goodsEntity.getId());
+        footprintEntity.setAddTime(new Date());
+        if (null != referrer) {
+            footprintEntity.setReferrer(referrer);
+        } else {
+            footprintEntity.setReferrer(0);
+        }
+        userFootprintService.save(footprintEntity);
+        //
+        Map<String, Object> resultObj = new HashMap();
+        resultObj.put("info", goodsEntity);
+        resultObj.put("gallery", galleryList);
+        resultObj.put("attribute", attributeList);
+        resultObj.put("userHasCollect", userHasCollect);
+        resultObj.put("issue", issueList);
+        resultObj.put("comment", comment);
+        resultObj.put("brand", brand);
+        resultObj.put("specificationList", specificationList);
+        resultObj.put("productList", productList);
+        // 记录推荐人是否可以领取红包，用户登录时校验
+        try {
+            // 是否已经有可用的转发红包
+            List<CouponVO> enableCouponList = couponService.queryUserCoupons(userId, CouponSentType.GOOD_TRANFER.getKey());
+            if (CollectionUtils.isEmpty(enableCouponList) && null != referrer && null != userId) {
+                // 获取优惠信息
+                List<CouponVO> couponList = couponService.queryCouponBySendType(CouponSentType.GOOD_TRANFER.getKey());
+                if (!CollectionUtils.isEmpty(couponList)) {
+                    CouponVO couponVo = couponList.get(0); //TODO
+                    Integer footprintNum = userFootprintService.queryTotalByGoodsId(goodsId, referrer);
+                    if (null != footprintNum && null != couponVo.getMinTransmitNum()
+                            && footprintNum > couponVo.getMinTransmitNum()) {
+                        UserCouponEntity userCoupon = new UserCouponEntity();
+                        userCoupon.setCouponId(couponVo.getId());
+                        userCoupon.setCouponNo(CharUtil.getRandomString(12));
+                        userCoupon.setUserId(userId);
+                        userCoupon.setAddTime(new Date());
+                        userCoupon.setCouponStatus(CouponStatus.USUSE.getKey());
+                        userCouponService.save(userCoupon);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("记录推荐人是否可以领取红包异常:goodsId:{},userId:{},referrer:{},异常信息:{}",
+                    goodsId, userId, referrer, e);
+        }
+
+        return resultObj;
+    }
+
+
 }

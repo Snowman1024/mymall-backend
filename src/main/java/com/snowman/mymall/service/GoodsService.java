@@ -5,6 +5,7 @@ import com.snowman.mymall.vo.GoodsVO;
 import com.snowman.mymall.vo.UserVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -18,4 +19,5 @@ public interface GoodsService {
 
     public Result list(UserVO loginUser, GoodsVO goodsVO, Integer pageNum, Integer pageSize);
 
+    public Map<String,Object> detail(Integer userId, Integer id, Integer referrer);
 }

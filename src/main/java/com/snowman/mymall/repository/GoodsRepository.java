@@ -3,6 +3,7 @@ package com.snowman.mymall.repository;
 import com.snowman.mymall.common.jpa.BaseRepository;
 import com.snowman.mymall.entity.GoodsEntity;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface GoodsRepository extends BaseRepository<GoodsEntity, Integer> {
     @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE is_delete=0 AND is_new=1 " +
             " ORDER BY id DESC ")
     List<GoodsEntity> queryNewGoodsList();
+
+    @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE id = :id")
+    GoodsEntity queryById(@Param(value = "id") Integer id);
 }
