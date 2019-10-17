@@ -21,4 +21,12 @@ public interface GoodsRepository extends BaseRepository<GoodsEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE id = :id")
     GoodsEntity queryById(@Param(value = "id") Integer id);
+
+    @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE category_id = :categoryId " +
+            " AND is_on_sale=1 AND is_delete=0 ORDER BY id DESC ")
+    List<GoodsEntity> queryByCategoryId(@Param(value = "categoryId") Integer categoryId);
+
+    @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE is_on_sale=1 AND is_delete=0 " +
+            " AND id IN (:goodsIds) ORDER BY id DESC ")
+    List<GoodsEntity> queryByGoodsIds(@Param(value = "goodsIds") List<Integer> goodsIds);
 }

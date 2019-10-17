@@ -20,4 +20,8 @@ public interface GoodsService {
     public Result list(UserVO loginUser, GoodsVO goodsVO, Integer pageNum, Integer pageSize);
 
     public Map<String,Object> detail(Integer userId, Integer id, Integer referrer);
+
+    public Map<String,Object> related(Integer id);
+
+    public GoodsVO queryById(Integer goodsId);
 }

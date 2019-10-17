@@ -1,6 +1,7 @@
 package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +51,8 @@ public class GoodsController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     /**
      * 　　人气推荐
@@ -110,8 +115,8 @@ public class GoodsController {
     @ApiImplicitParams({@ApiImplicitParam(name = "id", value = "商品id", paramType = "path", required = true),
             @ApiImplicitParam(name = "referrer", value = "商品referrer", paramType = "path", required = false)})
     @PostMapping(value = "detail")
-    public Object detail(Integer id, Integer referrer, HttpServletRequest request) {
-        logger.info("商品详情controller开始,id:{},referrer:{}");
+    public Result detail(Integer id, Integer referrer, HttpServletRequest request) {
+        logger.info("商品详情controller开始,id:{},referrer:{}",id,referrer);
         if (null == id) {
             logger.error("商品详情controller参数异常");
             return Result.error("参数异常");
@@ -125,6 +130,8 @@ public class GoodsController {
             logger.error("商品详情controller异常:{}", e);
             return Result.error(e.toString());
         }
+        logger.info("商品详情controller结束:{}",
+                JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect));
         return result;
 
 
@@ -145,7 +152,36 @@ public class GoodsController {
         if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
             return null;
         }
+        Boolean validateFlag = jwtTokenUtil.validateToken(token,tokenEntity);
+        if(!validateFlag){
+            return null;
+        }
         return tokenEntity.getUserId();
     }
 
+
+    /**
+     * 商品详情页的大家都在看的商品
+     */
+    @ApiOperation(value = "商品详情页")
+    @IgnoreAuth
+    @PostMapping(value = "/related")
+    public Result related(Integer id) {
+        logger.info("商品详情页大家都在看的商品controller开始,id:{}",id);
+        if(null == id){
+            logger.error("商品详情页大家都在看的商品controller参数异常");
+            return Result.error("参数异常");
+        }
+        Result result;
+        try{
+            Map<String, Object> resultObj = goodsService.related(id);
+            result =  Result.ok(resultObj);
+        }catch (Exception e){
+            logger.error("商品详情页大家都在看的商品controller异常:{}",e);
+            return Result.error(e.toString());
+        }
+        logger.info("商品详情页大家都在看的商品controller结束:{}",
+                JSON.toJSONString(result,SerializerFeature.DisableCircularReferenceDetect));
+        return result;
+    }
 }

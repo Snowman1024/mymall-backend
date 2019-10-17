@@ -29,8 +29,8 @@ public interface CouponRepository extends BaseRepository<CouponEntity, Integer> 
                                   @Param(value = "sendType") Integer sendType);
 
 
-    @Query(nativeQuery = true,value = "SELECT * FROM coupon WHERE send_type=:sendType " +
+    @Query(nativeQuery = true,value = "SELECT * FROM coupon WHERE send_type IN (:sendTypeList) " +
             " AND use_end_date >= now() AND now() >= use_start_date " +
             " order by id desc ")
-    List<CouponEntity> queryCouponBySendType(@Param(value = "sendType") Integer sendType);
+    List<CouponEntity> queryCouponBySendType(@Param(value = "sendTypeList") List<Integer> sendTypeList);
 }

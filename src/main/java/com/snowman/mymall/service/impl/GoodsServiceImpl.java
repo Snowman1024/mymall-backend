@@ -80,6 +80,9 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private UserCouponService userCouponService;
 
+    @Autowired
+    private RelatedGoodsService relatedGoodsService;
+
     /**
      * @return
      */
@@ -274,7 +277,7 @@ public class GoodsServiceImpl implements GoodsService {
             return;
         }
         SearchHistoryEntity searchHistory = new SearchHistoryEntity();
-        searchHistory.setAddTime(System.currentTimeMillis() / 1000);
+        searchHistory.setAddTime(new Date());
         searchHistory.setKeyword(keyword);
         searchHistory.setUserId(null != userVO ? userVO.getUserId().toString() : "");
         searchHistory.setFrom(SearchFrom.MINIPROGRAM.getKey());
@@ -343,7 +346,7 @@ public class GoodsServiceImpl implements GoodsService {
         if (null != hotComment && hotComment.size() > 0) {
             UserVO commentUser = userService.queryByUserId(hotComment.get(0).getUserId());
             commentInfo.put("content", Base64Util.decode(hotComment.get(0).getContent()));
-            commentInfo.put("addTime", DateUtils.timeToStr(hotComment.get(0).getAddTime(), DateUtils.DATE_PATTERN));
+            commentInfo.put("addTime", DateUtils.format(hotComment.get(0).getAddTime()));
             commentInfo.put("nickname", commentUser.getNickName());
             commentInfo.put("avatar", commentUser.getAvatar());
             Integer commentId = hotComment.get(0).getId();
@@ -379,7 +382,9 @@ public class GoodsServiceImpl implements GoodsService {
                 List<CouponVO> enableCouponList = couponService.queryUserCoupons(userId, CouponSentType.GOOD_TRANFER.getKey());
                 if (CollectionUtils.isEmpty(enableCouponList) && null != referrer ) {
                     // 获取优惠信息
-                    List<CouponVO> couponList = couponService.queryCouponBySendType(CouponSentType.GOOD_TRANFER.getKey());
+                    List<Integer> sendTypeList = new ArrayList<>();
+                    sendTypeList.add(CouponSentType.GOOD_TRANFER.getKey());
+                    List<CouponVO> couponList = couponService.queryCouponBySendType(sendTypeList);
                     if (!CollectionUtils.isEmpty(couponList)) {
                         CouponVO couponVo = couponList.get(0); //TODO
                         Integer footprintNum = userFootprintService.queryTotalByGoodsId(goodsId, referrer);
@@ -416,4 +421,96 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
 
+    /**
+     * 商品详情页的大家都在看的商品
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String,Object> related(Integer id){
+        List<RelatedGoodsVO> relatedGoodsEntityList = relatedGoodsService.queryRelatedGoods();
+
+        List<Integer> relatedGoodsIds = new ArrayList();
+        for (RelatedGoodsVO relatedGoodsEntity : relatedGoodsEntityList) {
+            relatedGoodsIds.add(relatedGoodsEntity.getRelatedGoodsId());
+        }
+
+        List<GoodsVO> relatedGoods = new ArrayList<GoodsVO>();
+        if (CollectionUtils.isEmpty(relatedGoodsIds)) {
+            //查找同分类下的商品
+            GoodsEntity categoryGoods = goodsRepository.queryById(id);
+            relatedGoods = this.queryByCategoryId(categoryGoods.getCategoryId());
+        } else {
+            relatedGoods = this.queryByGoodsIds(relatedGoodsIds);
+        }
+
+        Map<String, Object> resultObj = new HashMap();
+        resultObj.put("goodsList", relatedGoods);
+        return resultObj;
+    }
+
+    /**
+     * 通过品类id查商品
+     * @param categoryId
+     * @return
+     */
+    private List<GoodsVO> queryByCategoryId(Integer categoryId){
+        if(null == categoryId){
+            logger.error("商品品类是空");
+            return null;
+        }
+        List<GoodsEntity> goodsEntityList = goodsRepository.queryByCategoryId(categoryId);
+        List<GoodsVO> voList = new ArrayList<>();
+        if(CollectionUtils.isEmpty(goodsEntityList)){
+            return voList;
+        }
+        BeanCopier copier = BeanCopier.create(GoodsEntity.class, GoodsVO.class, false);
+        for (GoodsEntity entity : goodsEntityList) {
+            GoodsVO vo = new GoodsVO();
+            copier.copy(entity, vo, null);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+    /**
+     * 通过商品id列表查商品
+     * @param goodsIdList
+     * @return
+     */
+    private List<GoodsVO> queryByGoodsIds(List<Integer> goodsIdList){
+        if(CollectionUtils.isEmpty(goodsIdList)){
+            logger.error("goodsIdList是空");
+            return null;
+        }
+        List<GoodsEntity> goodsEntityList = goodsRepository.queryByGoodsIds(goodsIdList);
+        List<GoodsVO> voList = new ArrayList<>();
+        if(CollectionUtils.isEmpty(goodsEntityList)){
+            return voList;
+        }
+        BeanCopier copier = BeanCopier.create(GoodsEntity.class, GoodsVO.class, false);
+        for (GoodsEntity entity : goodsEntityList) {
+            GoodsVO vo = new GoodsVO();
+            copier.copy(entity, vo, null);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+    /**
+     * 通过id查商品
+     * @param goodsId
+     * @return
+     */
+    @Override
+    public GoodsVO queryById(Integer goodsId){
+       GoodsEntity entity = goodsRepository.queryById(goodsId);
+        GoodsVO vo = new GoodsVO();
+       if(null == entity){
+           return vo;
+       }
+        BeanCopier copier = BeanCopier.create(GoodsEntity.class, GoodsVO.class, false);
+        copier.copy(entity, vo, null);
+        return vo;
+    }
 }

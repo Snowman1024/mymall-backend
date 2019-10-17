@@ -13,4 +13,6 @@ import java.util.List;
 public interface GoodsSpecificationService {
 
     List<GoodsSpecificationVO> queryByGoodsId(Integer goodsId);
+
+    public List<GoodsSpecificationVO> queryByGoodsIdAndIds(Integer goodsId,List<Integer> ids);
 }

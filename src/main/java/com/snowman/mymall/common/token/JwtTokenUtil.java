@@ -28,8 +28,8 @@ public class JwtTokenUtil implements Serializable {
 
     // 密钥
     private final String SECRET = "MyMall@2019!QAZ";
-    // token有效时间 30天过期
-    public static final long VALID_TIME = 3600 * 24 * 30L;
+    // token有效时间 1天过期
+    public static final long VALID_TIME = 3600 * 24 * 1L;
 
 
     /**

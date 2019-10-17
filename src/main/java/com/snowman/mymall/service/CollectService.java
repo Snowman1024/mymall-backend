@@ -1,5 +1,9 @@
 package com.snowman.mymall.service;
 
+import com.snowman.mymall.vo.UserVO;
+
+import java.util.Map;
+
 /**
  * @Description
  * @Author Snowman2014
@@ -9,4 +13,6 @@ package com.snowman.mymall.service;
 public interface CollectService {
 
     public Integer queryTotal(Integer userId,Integer valueId,Integer typeId);
+
+    public Map<String, Object> addOrDelete(UserVO loginUser, Integer typeId, Integer valueId);
 }

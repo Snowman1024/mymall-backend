@@ -57,6 +57,6 @@ public class UserCouponEntity implements Serializable {
     private Integer referrer;
 
     //状态 1. 可用 2. 已用 3. 过期
-    @Column(name = "coupon_status")
+    @Column(name = "coupon_status",columnDefinition = "smallint")
     private Integer couponStatus;
 }

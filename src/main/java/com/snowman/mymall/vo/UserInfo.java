@@ -14,13 +14,18 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
     private static final long serialVersionUID = 1000814469411691053L;
 
-    private String avatarUrl;
-
-    private String city;
+    private String nickName;
 
     private Integer gender;
 
-    private String nickName;
+    private String language;
+
+    private String city;
 
     private String province;
+
+    private String country;
+
+    private String avatarUrl;
+
 }

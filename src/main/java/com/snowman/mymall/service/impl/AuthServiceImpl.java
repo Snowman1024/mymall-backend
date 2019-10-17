@@ -11,6 +11,8 @@ import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.snowman.mymall.common.utils.CharUtil;
 import com.snowman.mymall.common.utils.CommonUtil;
 import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.entity.UserEntity;
+import com.snowman.mymall.repository.UserRepository;
 import com.snowman.mymall.vo.FullUserInfo;
 import com.snowman.mymall.vo.LoginVO;
 import com.snowman.mymall.vo.UserInfo;
@@ -50,6 +52,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private TokenService tokenService;
@@ -110,39 +115,39 @@ public class AuthServiceImpl implements AuthService {
         }
         Date nowTime = new Date();
         String openId = sessionData.getString("openid");
-        UserVO userVo = userService.queryByOpenId(openId);
+        UserEntity userEntity = userRepository.queryByOpenId(openId);
 
-        if (null == userVo) {
-            userVo = new UserVO();
-            userVo.setUserName("微信用户" + CharUtil.getRandomString(12));
-            userVo.setPassWord(openId);
-            userVo.setRegisterTime(nowTime);
-            userVo.setRegisterIp(ip);
-            userVo.setLastLoginIp(ip);
-            userVo.setLastLoginTime(nowTime);
-            userVo.setWeixinOpenId(openId);
-            userVo.setAvatar(userInfo.getAvatarUrl());
+        if (null == userEntity) {
+            userEntity = new UserEntity();
+            userEntity.setUserName("微信用户" + CharUtil.getRandomString(12));
+            userEntity.setPassWord(openId);
+            userEntity.setRegisterTime(nowTime);
+            userEntity.setRegisterIp(ip);
+            userEntity.setLastLoginIp(ip);
+            userEntity.setLastLoginTime(nowTime);
+            userEntity.setWeixinOpenId(openId);
+            userEntity.setAvatar(userInfo.getAvatarUrl());
             //性别 0：未知、1：男、2：女
-            userVo.setGender(userInfo.getGender());
-            userVo.setNickName(userInfo.getNickName());
+            userEntity.setGender(userInfo.getGender());
+            userEntity.setNickName(userInfo.getNickName());
         } else {
-            userVo.setLastLoginIp(ip);
-            userVo.setLastLoginTime(nowTime);
+            userEntity.setLastLoginIp(ip);
+            userEntity.setLastLoginTime(nowTime);
         }
-        userService.save(userVo);
+        userEntity = userRepository.save(userEntity);
 
-        Map<String, Object> tokenMap = tokenService.createToken(userVo.getUserId());
+        Map<String, Object> tokenMap = tokenService.createToken(userEntity.getUserId());
         String token = (String) tokenMap.get("token");
 
         if (StringUtils.isBlank(token)) {
-            logger.error("微信登录service,userId:{}生成d的token是空", userVo.getUserId());
+            logger.error("微信登录service,userId:{}生成d的token是空", userEntity.getUserId());
             return Result.error("登录失败");
         }
 
         Map<String, Object> resultObj = new HashMap<String, Object>();
         resultObj.put("token", token);
         resultObj.put("userInfo", userInfo);
-        resultObj.put("userId", userVo.getUserId());
+        resultObj.put("userId", userEntity.getUserId());
 
         logger.info("微信登录service结束");
         return Result.ok(resultObj);

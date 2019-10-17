@@ -18,11 +18,12 @@ public class FullUserInfo implements Serializable {
 
     private String rawData;
 
-    private UserInfo userInfo;
+    private String signature;
 
     private String encryptedData;
 
     private String iv;
 
-    private String signature;
+    private UserInfo userInfo;
+
 }

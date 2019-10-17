@@ -96,12 +96,12 @@ public class CouponServiceImpl implements CouponService {
 
     /**
      * 通过发放方式查询优惠券信息
-     * @param sendType
+     * @param sendTypeList
      * @return
      */
     @Override
-    public List<CouponVO> queryCouponBySendType(Integer sendType){
-       List<CouponEntity> entityList = couponRepository.queryCouponBySendType(sendType);
+    public List<CouponVO> queryCouponBySendType(List<Integer> sendTypeList){
+       List<CouponEntity> entityList = couponRepository.queryCouponBySendType(sendTypeList);
         List<CouponVO> voList = new ArrayList<>();
         if (CollectionUtils.isEmpty(entityList)) {
             return voList;

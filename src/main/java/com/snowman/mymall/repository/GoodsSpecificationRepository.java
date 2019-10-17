@@ -23,4 +23,9 @@ public interface GoodsSpecificationRepository extends BaseRepository<GoodsSpecif
             " ORDER BY s.sort_order asc ")
     List<Object> queryByGoodsId(@Param(value = "goodsId")Integer goodsId);
 
+    @Query(nativeQuery = true,value = "SELECT * FROM goods_specification " +
+            " WHERE goods_id = :goodsId AND id in (:ids) "  +
+            " ORDER BY id DESC ")
+    List<GoodsSpecificationEntity> queryByGoodsIdAndIds(@Param(value = "goodsId")Integer goodsId,
+                                                        @Param(value = "ids")List<Integer> ids);
 }

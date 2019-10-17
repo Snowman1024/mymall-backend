@@ -1,9 +1,12 @@
 package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.utils.IpUtil;
+import com.snowman.mymall.common.utils.RequestUtil;
 import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.vo.FullUserInfo;
 import com.snowman.mymall.vo.LoginVO;
 import com.snowman.mymall.service.AuthService;
 import io.swagger.annotations.Api;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description
@@ -58,7 +63,7 @@ public class AuthController {
             logger.error("通过手机，密码登录controller异常:{}", e);
             return Result.error(e.getMessage());
         }
-        logger.info("通过手机，密码登录controller结束:", JSON.toJSONString(result));
+        logger.info("通过手机，密码登录controller结束:{}", JSON.toJSONString(result));
         return result;
     }
 
@@ -66,54 +71,69 @@ public class AuthController {
     /**
      * 微信登录
      *
-     * @param loginVO
      * @param request
      * @return
      */
     @ApiOperation(value = "微信登录")
     @IgnoreAuth
     @PostMapping("/login_by_weixin")
-    public Result loginByWeixin(LoginVO loginVO, HttpServletRequest request) {
-        logger.info("微信登录controller开始,参数:{}", JSON.toJSONString(loginVO));
-        if (null == loginVO || null == loginVO.getFullUserInfo()
-                || null == loginVO.getFullUserInfo().getUserInfo()) {
+    public Result loginByWeixin( HttpServletRequest request) {
+        logger.info("微信登录controller开始");
+
+        JSONObject jsonParam = RequestUtil.getJsonRequest(request);
+        String code = jsonParam.getString("code");
+        FullUserInfo fullUserInfo = jsonParam.getObject("userInfo", FullUserInfo.class);
+        logger.info("微信登录controller,code:{}",code);
+        logger.info("微信登录controller,fullUserInfo:{}",JSON.toJSONString(fullUserInfo));
+
+        if (StringUtils.isBlank(code)|| null == fullUserInfo) {
             logger.error("微信登录controller参数异常");
             return Result.error("登录失败");
         }
         Result result;
         try {
+            LoginVO loginVO = new LoginVO();
+            loginVO.setCode(code);
+            loginVO.setFullUserInfo(fullUserInfo);
             result = authService.loginByWeixin(loginVO, IpUtil.getClientIp(request));
         } catch (Exception e) {
             logger.error("微信登录controller异常:{}", e);
-            return Result.error(e.toString());
+            return Result.error("登录失败");
         }
-        logger.info("微信登录controller结束:", JSON.toJSONString(result));
+        logger.info("微信登录controller结束:{}", JSON.toJSONString(result));
         return result;
     }
 
     /**
      * 支付宝登录
      *
-     * @param loginVO
-     * @param httpServletRequest
+     * @param request
      * @return
      */
     @ApiOperation(value = "支付宝登录")
     @IgnoreAuth
     @PostMapping("/login_by_ali")
-    public Object login_by_ali(LoginVO loginVO, HttpServletRequest httpServletRequest) {
-        logger.info("支付宝登录controller开始:", JSON.toJSONString(loginVO));
-        if (null == loginVO) {
+    public Object login_by_ali(HttpServletRequest request) {
+        logger.info("支付宝登录controller开始");
+
+        JSONObject jsonParam = RequestUtil.getJsonRequest(request);
+        String code = jsonParam.getString("code");
+        logger.info("支付宝登录controller,code:{}",code);
+
+        if (StringUtils.isBlank(code)) {
             logger.error("支付宝登录controller参数异常");
             return Result.error("登录失败");
         }
         Result result;
         try {
-            result = authService.loginByAli(loginVO, IpUtil.getClientIp(httpServletRequest));
+            LoginVO loginVO = new LoginVO();
+            loginVO.setCode(code);
+            result = authService.loginByAli(loginVO, IpUtil.getClientIp(request));
         } catch (Exception e) {
             logger.error("支付宝登录controller异常:{}", e);
-            return Result.error(e.toString());
+            return Result.error("登录失败");
         }
+        logger.info("支付宝登录controller结束:{}", JSON.toJSONString(result));
         return result;
     }
 }

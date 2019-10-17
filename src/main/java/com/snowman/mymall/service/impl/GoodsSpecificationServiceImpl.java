@@ -1,10 +1,12 @@
 package com.snowman.mymall.service.impl;
 
 import com.snowman.mymall.common.utils.ConvertUtil;
+import com.snowman.mymall.entity.GoodsSpecificationEntity;
 import com.snowman.mymall.repository.GoodsSpecificationRepository;
 import com.snowman.mymall.service.GoodsSpecificationService;
 import com.snowman.mymall.vo.GoodsSpecificationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -48,5 +50,27 @@ public class GoodsSpecificationServiceImpl implements GoodsSpecificationService 
             goodsSpecificationVOList.add(goodsSpecificationVO);
         }
         return goodsSpecificationVOList;
+    }
+
+    /**
+     * @param goodsId
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<GoodsSpecificationVO> queryByGoodsIdAndIds(Integer goodsId, List<Integer> ids) {
+        List<GoodsSpecificationEntity> entityList = goodsSpecificationRepository.queryByGoodsIdAndIds(goodsId, ids);
+
+        List<GoodsSpecificationVO> voList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(entityList)) {
+            return voList;
+        }
+        BeanCopier copier = BeanCopier.create(GoodsSpecificationEntity.class, GoodsSpecificationVO.class, false);
+        for (GoodsSpecificationEntity entity : entityList) {
+            GoodsSpecificationVO vo = new GoodsSpecificationVO();
+            copier.copy(entity, vo, null);
+            voList.add(vo);
+        }
+        return voList;
     }
 }

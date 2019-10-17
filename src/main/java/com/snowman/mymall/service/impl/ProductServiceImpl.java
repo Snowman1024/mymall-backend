@@ -33,6 +33,28 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductVO> queryByGoodsId(Integer goodsId) {
 
         List<Object> productObjectList = productRepository.queryByGoodsId(goodsId);
+        List<ProductVO> productVOList = entityToVo(productObjectList);
+        return productVOList;
+    }
+
+    /**
+     * 通过id查产品
+     * @param id
+     * @return
+     */
+    @Override
+    public ProductVO queryById(Integer id){
+        List<Object> productObjectList = productRepository.queryById(id);
+        List<ProductVO> productVOList = entityToVo(productObjectList);
+        return productVOList.get(0);
+    }
+
+    /**
+     * entity转vo
+     * @param productObjectList
+     * @return
+     */
+    private List<ProductVO> entityToVo(List<Object> productObjectList){
         List<ProductVO> productVOList = new ArrayList<>();
         if (CollectionUtils.isEmpty(productObjectList)) {
             return productVOList;

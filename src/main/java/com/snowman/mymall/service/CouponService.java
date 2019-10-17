@@ -14,5 +14,5 @@ public interface CouponService {
 
     public List<CouponVO> queryUserCoupons(Integer userId, Integer sendType);
 
-    public List<CouponVO> queryCouponBySendType(Integer sendType);
+    public List<CouponVO> queryCouponBySendType(List<Integer> sendTypeList);
 }

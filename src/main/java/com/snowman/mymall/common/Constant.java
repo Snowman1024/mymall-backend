@@ -8,7 +8,7 @@ package com.snowman.mymall.common;
  **/
 public class Constant {
 
-    public static final String HOST_URL = "http://localshot:8080";
+    public static final String HOST_URL = "http://localhost:8080";
     /**
      * 缓存有效时间12小时
      */
@@ -23,4 +23,9 @@ public class Constant {
      * 首页新商品
      */
     public static final String BANNER_KEY = "banner_list";
+
+    /**
+     * 商城业务缓存
+     */
+    public static final String SHOP_CACHE_NAME = "shopCache";
 }
