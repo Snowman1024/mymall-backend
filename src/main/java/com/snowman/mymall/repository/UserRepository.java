@@ -2,8 +2,11 @@ package com.snowman.mymall.repository;
 
 import com.snowman.mymall.entity.UserEntity;
 import com.snowman.mymall.common.jpa.BaseRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Date;
 
 /**
  * @Description
@@ -21,5 +24,12 @@ public interface UserRepository extends BaseRepository<UserEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM user WHERE weixin_openid = :openId")
     UserEntity queryByOpenId(@Param(value = "openId")String openId);
+
+    @Modifying
+    @Query(nativeQuery = true,value = "UPDATE user SET last_login_ip=:ip,last_login_time=:lastLoginTime " +
+            " WHERE id =:id ")
+    Integer updateUser(@Param(value = "id") Integer id,
+                       @Param(value = "ip") String ip,
+                       @Param(value = "lastLoginTime") Date lastLoginTime);
 
 }

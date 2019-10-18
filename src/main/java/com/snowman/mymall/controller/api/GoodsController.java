@@ -2,11 +2,11 @@ package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
 import com.snowman.mymall.common.token.JwtTokenUtil;
 import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.config.HostInfo;
 import com.snowman.mymall.entity.TokenEntity;
 import com.snowman.mymall.interceptor.AuthorizationInterceptor;
 import com.snowman.mymall.service.GoodsService;
@@ -27,9 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,6 +52,9 @@ public class GoodsController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private HostInfo hostInfo;
+
     /**
      * 　　人气推荐
      */
@@ -65,7 +66,7 @@ public class GoodsController {
         Map bannerInfo = new HashMap();
         bannerInfo.put("url", "");
         bannerInfo.put("name", "大家都在买的严选好物");
-        bannerInfo.put("imgUrl", Constant.HOST_URL + "/image/goodshot.png");
+        bannerInfo.put("imgUrl", hostInfo.getUrl() + "/image/goodshot.png");
         resultObj.put("bannerInfo", bannerInfo);
         return Result.ok(resultObj);
     }
@@ -116,7 +117,7 @@ public class GoodsController {
             @ApiImplicitParam(name = "referrer", value = "商品referrer", paramType = "path", required = false)})
     @PostMapping(value = "detail")
     public Result detail(Integer id, Integer referrer, HttpServletRequest request) {
-        logger.info("商品详情controller开始,id:{},referrer:{}",id,referrer);
+        logger.info("商品详情controller开始,id:{},referrer:{}", id, referrer);
         if (null == id) {
             logger.error("商品详情controller参数异常");
             return Result.error("参数异常");
@@ -144,7 +145,7 @@ public class GoodsController {
      */
     public Integer getUserId(HttpServletRequest request) {
         String token = request.getHeader(AuthorizationInterceptor.LOGIN_TOKEN_KEY);
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return null;
         }
         //查询token信息
@@ -152,8 +153,8 @@ public class GoodsController {
         if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
             return null;
         }
-        Boolean validateFlag = jwtTokenUtil.validateToken(token,tokenEntity);
-        if(!validateFlag){
+        Boolean validateFlag = jwtTokenUtil.validateToken(token, tokenEntity);
+        if (!validateFlag) {
             return null;
         }
         return tokenEntity.getUserId();
@@ -167,21 +168,21 @@ public class GoodsController {
     @IgnoreAuth
     @PostMapping(value = "/related")
     public Result related(Integer id) {
-        logger.info("商品详情页大家都在看的商品controller开始,id:{}",id);
-        if(null == id){
+        logger.info("商品详情页大家都在看的商品controller开始,id:{}", id);
+        if (null == id) {
             logger.error("商品详情页大家都在看的商品controller参数异常");
             return Result.error("参数异常");
         }
         Result result;
-        try{
+        try {
             Map<String, Object> resultObj = goodsService.related(id);
-            result =  Result.ok(resultObj);
-        }catch (Exception e){
-            logger.error("商品详情页大家都在看的商品controller异常:{}",e);
+            result = Result.ok(resultObj);
+        } catch (Exception e) {
+            logger.error("商品详情页大家都在看的商品controller异常:{}", e);
             return Result.error(e.toString());
         }
         logger.info("商品详情页大家都在看的商品controller结束:{}",
-                JSON.toJSONString(result,SerializerFeature.DisableCircularReferenceDetect));
+                JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect));
         return result;
     }
 }

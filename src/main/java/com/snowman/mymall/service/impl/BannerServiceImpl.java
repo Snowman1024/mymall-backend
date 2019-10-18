@@ -1,9 +1,10 @@
 package com.snowman.mymall.service.impl;
 
-import com.snowman.mymall.vo.BannerVO;
+import com.snowman.mymall.config.HostInfo;
 import com.snowman.mymall.entity.BannerEntity;
 import com.snowman.mymall.repository.BannerRepository;
 import com.snowman.mymall.service.BannerService;
+import com.snowman.mymall.vo.BannerVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +29,29 @@ public class BannerServiceImpl implements BannerService {
     @Autowired
     private BannerRepository bannerRepository;
 
+    @Autowired
+    private HostInfo hostInfo;
+
     /**
      * 首页查询banner信息
+     *
      * @return
      */
     @Override
-    public List<BannerVO> queryBannerList(){
+    public List<BannerVO> queryBannerList() {
         logger.info("首页查询banner信息service开始");
 
         List<BannerVO> bannerVOList = new ArrayList<>();
 
-        List<BannerEntity> bannerEntityList =  bannerRepository.queryBannerList();
-        if(CollectionUtils.isEmpty(bannerEntityList)){
+        List<BannerEntity> bannerEntityList = bannerRepository.queryBannerList();
+        if (CollectionUtils.isEmpty(bannerEntityList)) {
             return bannerVOList;
         }
-        BeanCopier copier = BeanCopier.create(BannerEntity.class,BannerVO.class,false);
-        for(BannerEntity entity:bannerEntityList){
+        BeanCopier copier = BeanCopier.create(BannerEntity.class, BannerVO.class, false);
+        for (BannerEntity entity : bannerEntityList) {
             BannerVO bannerVO = new BannerVO();
-            copier.copy(entity,bannerVO,null);
+            copier.copy(entity, bannerVO, null);
+            bannerVO.setImageUrl(hostInfo.getUrl() + bannerVO.getImageUrl());
             bannerVOList.add(bannerVO);
         }
         logger.info("首页查询banner信息service结束");

@@ -2,8 +2,11 @@ package com.snowman.mymall.repository;
 
 import com.snowman.mymall.entity.TokenEntity;
 import com.snowman.mymall.common.jpa.BaseRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Date;
 
 /**
  * @Description
@@ -18,5 +21,13 @@ public interface TokenRepository extends BaseRepository<TokenEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT * FROM user_token WHERE user_id=:userId")
     TokenEntity queryByUserId(@Param(value = "userId") Integer userId);
+
+    @Modifying
+    @Query(nativeQuery = true,value = "UPDATE user_token SET token=:token,update_time=:updateTime," +
+            " expire_time=:expireTime WHERE user_id=:userId")
+    Integer updateToken(@Param(value = "userId") Integer userId,
+                        @Param(value = "token")String token,
+                        @Param(value = "updateTime")Date updateTime,
+                        @Param(value = "expireTime")Date expireTime);
 
 }

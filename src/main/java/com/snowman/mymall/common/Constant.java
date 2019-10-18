@@ -8,9 +8,8 @@ package com.snowman.mymall.common;
  **/
 public class Constant {
 
-    public static final String HOST_URL = "http://localhost:8080";
     /**
-     * 缓存有效时间12小时
+     * 缓存有效时间2小时
      */
     public static final long CACHE_VALID_TIME = 3600 * 2L;
 

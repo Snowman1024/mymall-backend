@@ -1,5 +1,6 @@
 package com.snowman.mymall.controller.api;
 
+import com.alibaba.fastjson.JSON;
 import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.redis.RedisService;
@@ -72,7 +73,7 @@ public class IndexController {
 
             if (CollectionUtils.isEmpty(newGoodsList)) {
                 newGoodsList = goodsService.queryNewGoodsList();
-                redisService.setValue(Constant.NEW_GOODS_KEY, newGoodsList, Constant.CACHE_VALID_TIME);
+                redisService.setValue(Constant.NEW_GOODS_KEY, newGoodsList, Constant.CACHE_VALID_TIME * 1000);
             }
 
             Map<String, Object> resultObj = new HashMap<>();
@@ -83,7 +84,7 @@ public class IndexController {
             logger.error("首页查询新商品信息controller异常:{}", e);
             return Result.error(e.toString());
         }
-        logger.info("首页查询新商品信息controller结束");
+        logger.info("首页查询新商品信息controller结束,{}", JSON.toJSONString(result));
         return result;
     }
 
@@ -102,7 +103,7 @@ public class IndexController {
 
             if (CollectionUtils.isEmpty(bannerVOList)) {
                 bannerVOList = bannerService.queryBannerList();
-                redisService.setValue(Constant.BANNER_KEY, bannerVOList,Constant.CACHE_VALID_TIME);
+                redisService.setValue(Constant.BANNER_KEY, bannerVOList,Constant.CACHE_VALID_TIME * 1000);
             }
 
             Map<String, Object> resultObj = new HashMap<>();
@@ -113,7 +114,7 @@ public class IndexController {
             logger.error("首页查询banner信息controller异常:{}", e);
             return Result.error(e.toString());
         }
-        logger.info("首页查询banner信息controller结束");
+        logger.info("首页查询banner信息controller结束,{}",JSON.toJSONString(result));
         return result;
     }
 }

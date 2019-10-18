@@ -11,17 +11,17 @@ import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.snowman.mymall.common.utils.CharUtil;
 import com.snowman.mymall.common.utils.CommonUtil;
 import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.config.AliInfo;
+import com.snowman.mymall.config.WeixinInfo;
 import com.snowman.mymall.entity.UserEntity;
 import com.snowman.mymall.repository.UserRepository;
+import com.snowman.mymall.service.AuthService;
+import com.snowman.mymall.service.TokenService;
+import com.snowman.mymall.service.UserService;
 import com.snowman.mymall.vo.FullUserInfo;
 import com.snowman.mymall.vo.LoginVO;
 import com.snowman.mymall.vo.UserInfo;
 import com.snowman.mymall.vo.UserVO;
-import com.snowman.mymall.config.AliInfo;
-import com.snowman.mymall.config.WeixinInfo;
-import com.snowman.mymall.service.AuthService;
-import com.snowman.mymall.service.TokenService;
-import com.snowman.mymall.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,11 +130,11 @@ public class AuthServiceImpl implements AuthService {
             //性别 0：未知、1：男、2：女
             userEntity.setGender(userInfo.getGender());
             userEntity.setNickName(userInfo.getNickName());
+            userEntity = userRepository.save(userEntity);
+
         } else {
-            userEntity.setLastLoginIp(ip);
-            userEntity.setLastLoginTime(nowTime);
+            userRepository.updateUser(userEntity.getUserId(), ip, nowTime);
         }
-        userEntity = userRepository.save(userEntity);
 
         Map<String, Object> tokenMap = tokenService.createToken(userEntity.getUserId());
         String token = (String) tokenMap.get("token");

@@ -6,7 +6,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mymall?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/mymall?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&useSSL=false
 
     username: root
     password: password
@@ -88,3 +88,7 @@ ali:
   appId:
   privateKey:
   pubKey:
+
+host:
+  url: http://10.32.160.174:${server.port}
+  port: ${server.port}

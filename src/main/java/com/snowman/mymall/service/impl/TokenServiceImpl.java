@@ -70,13 +70,10 @@ public class TokenServiceImpl implements TokenService {
             tokenEntity.setUpdateTime(now);
             tokenEntity.setExpireTime(expireTime);
 
+            tokenRepository.save(tokenEntity);
         } else {
-            tokenEntity.setToken(token);
-            tokenEntity.setUpdateTime(now);
-            tokenEntity.setExpireTime(expireTime);
+            tokenRepository.updateToken(tokenEntity.getUserId(), token, now, expireTime);
         }
-        //jpa
-        tokenRepository.save(tokenEntity);
 
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
