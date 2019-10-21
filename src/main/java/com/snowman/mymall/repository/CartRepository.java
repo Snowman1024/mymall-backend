@@ -18,7 +18,7 @@ public interface CartRepository extends BaseRepository<CartEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT c.id,c.user_id,c.session_id,c.goods_id,c.goods_sn," +
             " c.product_id,c.goods_name,c.market_price,c.retail_price,c.number,c.goods_specifition_name_value," +
-            " c.goods_specifition_ids,c.checked,c.list_pic_url,g.list_pic_url,p.retail_price " +
+            " c.goods_specifition_ids,c.checked,c.list_pic_url,g.list_pic_url AS picUrl,p.retail_price AS rprice" +
             " FROM cart c " +
             " LEFT JOIN goods g ON c.goods_id = g.id " +
             " LEFT JOIN product p on p.goods_id = c.goods_id AND p.id = c.product_id " +
@@ -28,7 +28,7 @@ public interface CartRepository extends BaseRepository<CartEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT c.id,c.user_id,c.session_id,c.goods_id,c.goods_sn," +
             " c.product_id,c.goods_name,c.market_price,c.retail_price,c.number,c.goods_specifition_name_value," +
-            " c.goods_specifition_ids,c.checked,c.list_pic_url,g.list_pic_url,p.retail_price " +
+            " c.goods_specifition_ids,c.checked,c.list_pic_url,g.list_pic_url AS picUrl,p.retail_price AS rprice " +
             " FROM cart c " +
             " LEFT JOIN goods g ON c.goods_id = g.id " +
             " LEFT JOIN product p on p.goods_id = c.goods_id AND p.id = c.product_id " +

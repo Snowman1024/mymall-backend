@@ -19,7 +19,8 @@ public interface GoodsRepository extends BaseRepository<GoodsEntity, Integer> {
             " ORDER BY id DESC ")
     List<GoodsEntity> queryNewGoodsList();
 
-    @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE id = :id")
+    @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE id = :id " +
+            " AND is_on_sale=1 AND is_delete=0 ")
     GoodsEntity queryById(@Param(value = "id") Integer id);
 
     @Query(nativeQuery = true,value = "SELECT * FROM goods WHERE category_id = :categoryId " +

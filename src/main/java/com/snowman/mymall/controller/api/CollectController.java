@@ -1,7 +1,6 @@
 package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.snowman.mymall.common.annotation.LoginUser;
 import com.snowman.mymall.common.utils.Result;
 import com.snowman.mymall.service.CollectService;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,24 +37,24 @@ public class CollectController {
      */
     @ApiOperation(value = "添加取消收藏")
     @PostMapping("/addordelete")
-    public Result addOrDelete(@LoginUser UserVO loginUser,Integer typeId,Integer valueId) {
+    public Result addOrDelete(@LoginUser UserVO loginUser, Integer typeId, Integer valueId) {
         logger.info("添加取消收藏controller开始,typeId:{},valueId:{},loginUser:{}",
-                typeId,valueId, JSON.toJSONString(loginUser));
+                typeId, valueId, JSON.toJSONString(loginUser));
 
-        if(null == typeId || null == valueId){
+        if (null == typeId || null == valueId) {
             logger.error("添加取消收藏controller参数异常");
             return Result.error("参数异常");
         }
 
         Result result;
-        try{
-           Map<String,Object> returnObj = collectService.addOrDelete(loginUser,typeId,valueId);
-           result = Result.ok(returnObj);
-        }catch (Exception e){
-            logger.error("添加取消收藏controller异常:{}",e);
+        try {
+            Map<String, Object> returnObj = collectService.addOrDelete(loginUser, typeId, valueId);
+            result = Result.ok(returnObj);
+        } catch (Exception e) {
+            logger.error("添加取消收藏controller异常:{}", e);
             return Result.error("操作失败");
         }
-        logger.info("添加取消收藏controller结束,{}",result);
+        logger.info("添加取消收藏controller结束,{}", result);
         return result;
     }
 }

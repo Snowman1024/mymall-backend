@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,20 +65,20 @@ public class CartController {
     public Object add(@LoginUser UserVO loginUser, Integer goodsId, Integer productId, Integer number) {
         logger.info("添加商品到购物车controller开始;goodsId:{},productId:{},number:{},loginUser:{}",
                 goodsId, productId, number, JSON.toJSONString(loginUser));
-        if (null == goodsId  || null == productId || null == number
+        if (null == goodsId || null == productId || null == number
                 || null == loginUser || null == loginUser.getUserId()) {
             logger.error("添加商品到购物车controller参数异常");
             return Result.error("参数异常");
         }
         Result result;
-        try{
-           Map<String,Object> returnObj =  cartService.add(loginUser,goodsId,productId,number);
-           result = Result.ok(returnObj);
-        }catch (Exception e){
-            logger.error("添加商品到购物车controller异常:{}",e);
+        try {
+            Map<String, Object> returnObj = cartService.add(loginUser, goodsId, productId, number);
+            result = Result.ok(returnObj);
+        } catch (Exception e) {
+            logger.error("添加商品到购物车controller异常:{}", e);
             return Result.error("添加异常");
         }
-        logger.info("添加商品到购物车controlle结束,{}",JSON.toJSONString(result));
+        logger.info("添加商品到购物车controlle结束,{}", JSON.toJSONString(result));
         return result;
     }
 
@@ -97,14 +93,14 @@ public class CartController {
             return Result.error("参数异常");
         }
         Result result;
-        try{
-            Map<String,Object> returnObj =  cartService.getCart(loginUser);
+        try {
+            Map<String, Object> returnObj = cartService.getCart(loginUser);
             result = Result.ok(returnObj);
-        }catch (Exception e){
-            logger.error("获取购物车中的数据controller异常:{}",e);
+        } catch (Exception e) {
+            logger.error("获取购物车中的数据controller异常:{}", e);
             return Result.error("获取购物车中数据异常");
         }
-        logger.info("获取购物车中的数据controller结束,{}",JSON.toJSONString(result));
+        logger.info("获取购物车中的数据controller结束,{}", JSON.toJSONString(result));
         return result;
     }
 }

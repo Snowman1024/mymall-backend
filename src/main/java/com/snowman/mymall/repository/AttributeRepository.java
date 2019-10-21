@@ -17,7 +17,7 @@ import java.util.List;
 public interface AttributeRepository extends BaseRepository<AttributeEntity, Integer> {
 
     @Query(nativeQuery = true,value = "SELECT a.id,a.attribute_category_id,a.name,a.input_type," +
-            " a.value,a.sort_order,ga.value " +
+            " a.value,a.sort_order,ga.value AS gvalue " +
             " FROM attribute a left join goods_attribute ga ON ga.attribute_id=a.id " +
             " WHERE ga.goods_id = :goodsId " +
             " ORDER BY ga.id ASC ")

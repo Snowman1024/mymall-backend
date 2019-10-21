@@ -16,7 +16,7 @@ import java.util.List;
  **/
 public interface CommentRepository extends BaseRepository<CommentEntity, Integer> {
 
-    @Query(nativeQuery = true,value = "SELECT  count(1) FROM comment " +
+    @Query(nativeQuery = true,value = "SELECT count(1) FROM comment " +
             " WHERE type_id=:typeId AND value_id=:valueId AND status=1 ")
     int queryTotal(@Param(value = "typeId") Integer typeId,
                    @Param(value = "valueId") Integer valueId);

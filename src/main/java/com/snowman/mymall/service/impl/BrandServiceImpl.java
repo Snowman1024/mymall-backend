@@ -4,6 +4,7 @@ import com.snowman.mymall.entity.BrandEntity;
 import com.snowman.mymall.repository.BrandRepository;
 import com.snowman.mymall.service.BrandService;
 import com.snowman.mymall.vo.BrandVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BrandServiceImpl implements BrandService {
 
+    @Autowired
     private BrandRepository brandRepository;
 
     /**

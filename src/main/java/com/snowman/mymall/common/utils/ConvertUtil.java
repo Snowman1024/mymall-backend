@@ -9,7 +9,7 @@ public class ConvertUtil {
         if(null == obj){
             return "";
         }
-        return (String)obj;
+        return obj.toString();
     }
 
     public static Date toDate(Object obj){
@@ -23,14 +23,14 @@ public class ConvertUtil {
         if(null == obj){
             return null;
         }
-        return (Integer) obj;
+        return Integer.valueOf(obj.toString());
     }
 
     public static Double toDouble(Object obj){
         if(null == obj){
             return null;
         }
-        return (Double) obj;
+        return Double.valueOf(obj.toString());
     }
 
     public static BigDecimal toBigDecimal(Object obj){
@@ -40,6 +40,7 @@ public class ConvertUtil {
         BigDecimal b = new BigDecimal(obj.toString());
         return b;
     }
+
 
 
 }

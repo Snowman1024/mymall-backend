@@ -329,11 +329,11 @@ public class GoodsServiceImpl implements GoodsService {
 
         //查产品信息
         List<ProductVO> productList = productService.queryByGoodsId(goodsId);
-        //
+        //轮播图
         List<GoodsGalleryVO> galleryList = goodsGalleryService.queryByGoodsId(goodsId);
         //属性
         List<AttributeVO> attributeList = attributeService.queryByGoodsId(goodsId);
-        //
+        //常见问题
         List<GoodsIssueVO> issueList = goodsIssueService.queryGoodsIssueList();
         //品牌
         BrandVO brand = brandService.queryById(goodsEntity.getBrandId());

@@ -66,7 +66,7 @@ public class GoodsController {
         Map bannerInfo = new HashMap();
         bannerInfo.put("url", "");
         bannerInfo.put("name", "大家都在买的严选好物");
-        bannerInfo.put("imgUrl", hostInfo.getUrl() + "/image/goodshot.png");
+        bannerInfo.put("imgUrl", hostInfo.getUrl() + "/image/goods/goodshot.png");
         resultObj.put("bannerInfo", bannerInfo);
         return Result.ok(resultObj);
     }
