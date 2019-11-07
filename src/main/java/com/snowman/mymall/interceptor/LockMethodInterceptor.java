@@ -2,7 +2,7 @@ package com.snowman.mymall.interceptor;
 
 import com.snowman.mymall.common.annotation.CacheLock;
 import com.snowman.mymall.common.exception.ServiceException;
-import com.snowman.mymall.config.RedisLockHelper;
+import com.snowman.mymall.common.redis.RedisLockHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
