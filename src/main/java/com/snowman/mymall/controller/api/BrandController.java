@@ -39,7 +39,6 @@ public class BrandController {
      * 获取品牌分页
      */
     @ApiOperation(value = "获取品牌分页")
-    @IgnoreAuth
     @PostMapping("/list")
     public Result list(@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
                        @RequestParam(value = "size", defaultValue = "10") Integer pageSize) {
@@ -61,7 +60,6 @@ public class BrandController {
      * 品牌详情
      */
     @ApiOperation(value = "品牌详情")
-    @IgnoreAuth
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         logger.info("品牌详情controller开始,id:{}", id);

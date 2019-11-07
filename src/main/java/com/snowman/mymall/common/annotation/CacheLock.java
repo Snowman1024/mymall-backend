@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * @Date 2019/11/7 10:13
  * @Version 1.0
  **/
-@Target(ElementType.FIELD)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited

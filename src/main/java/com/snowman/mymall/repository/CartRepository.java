@@ -3,6 +3,7 @@ package com.snowman.mymall.repository;
 import com.snowman.mymall.common.jpa.BaseRepository;
 import com.snowman.mymall.entity.AttributeEntity;
 import com.snowman.mymall.entity.CartEntity;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -37,4 +38,9 @@ public interface CartRepository extends BaseRepository<CartEntity, Integer> {
     List<Object> queryList(@Param(value = "userId") Integer userId,
                            @Param(value = "goodsId") Integer goodsId,
                            @Param(value = "productId") Integer productId);
+
+    @Modifying
+    @Query(nativeQuery = true,value = "UPDATE cart SET number=:num WHERE id=:id")
+    Integer updateCartNum(@Param(value = "id")Integer id,
+                          @Param(value = "num")Integer num);
 }

@@ -168,7 +168,7 @@ public class CartServiceImpl implements CartService {
             String[] goodsSepcifitionValue = null;
             String goodsSpecificationIds = productVO.getGoodsSpecificationIds();
 
-            if (StringUtils.isNoneBlank(goodsSpecificationIds)) {
+            if (StringUtils.isNotBlank(goodsSpecificationIds)) {
                 List<Integer> idList = getSpecificationIdList(goodsSpecificationIds);
                 List<GoodsSpecificationEntity> specificationEntityList = goodsSpecificationRepository.
                         queryByGoodsIdAndIds(goodsId, idList);
@@ -183,9 +183,7 @@ public class CartServiceImpl implements CartService {
             cartEntity.setProductId(productId);
             cartEntity.setGoodsSn(productVO.getGoodsSn());
             cartEntity.setGoodsName(goodsEntity.getName());
-            cartEntity.setListPicUrl(goodsEntity.getListPicUrl());
             cartEntity.setNumber(number);
-            cartEntity.setSessionId("1");
             cartEntity.setUserId(loginUser.getUserId());
             cartEntity.setRetailPrice(productVO.getRetailPrice());
             cartEntity.setMarketPrice(productVO.getMarketPrice());
@@ -198,14 +196,11 @@ public class CartServiceImpl implements CartService {
 
         } else {
             //如果已经存在购物车中，则数量增加
-            if (productVO.getGoodsNumber() < (number + cartVO.getNumber())) {
+            Integer totalNum = number + cartVO.getNumber();
+            if (productVO.getGoodsNumber() < totalNum) {
                 return Result.error(400, "库存不足");
             }
-            cartVO.setNumber(cartVO.getNumber() + number);
-            CartEntity cartEntity = new CartEntity();
-            BeanCopier copier = BeanCopier.create(CartVO.class,CartEntity.class,false);
-            copier.copy(cartVO,cartEntity,null);
-            cartRepository.save(cartEntity);
+            cartRepository.updateCartNum(cartVO.getId(),totalNum);
         }
         return getCart(loginUser);
     }

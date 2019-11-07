@@ -30,9 +30,6 @@ public class CartEntity implements Serializable {
     @Column(name = "user_id")
     private Integer userId;
 
-    //sessionId
-    @Column(name = "session_id")
-    private String sessionId;
 
     //商品Id
     @Column(name = "goods_id")
@@ -74,7 +71,4 @@ public class CartEntity implements Serializable {
     @Column(name = "checked",columnDefinition = "smallint")
     private Integer checked;
 
-    //商品图片
-    @Column(name = "list_pic_url")
-    private String listPicUrl;
 }

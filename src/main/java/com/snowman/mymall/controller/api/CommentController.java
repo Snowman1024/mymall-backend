@@ -78,7 +78,6 @@ public class CommentController {
      * @return
      */
     @ApiOperation(value = "查询评论列表")
-    @IgnoreAuth
     @PostMapping("/list")
     public Object list(CommentVO commentVO,
                        @RequestParam(value = "page", defaultValue = "1") Integer pageNum,

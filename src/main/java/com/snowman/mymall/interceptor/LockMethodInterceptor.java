@@ -8,6 +8,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +25,9 @@ import java.util.UUID;
 @Configuration
 @Aspect
 public class LockMethodInterceptor {
+
+    private Logger logger = LoggerFactory.getLogger(LockMethodInterceptor.class);
+
 
     private final RedisLockHelper redisLockHelper;
     private final CacheKeyGenerator cacheKeyGenerator;
@@ -44,6 +49,7 @@ public class LockMethodInterceptor {
             throw new ServiceException("锁的key不能是空");
         }
         final String localKey = cacheKeyGenerator.getLockKey(pjp);
+        logger.info("localKey:"+localKey);
         String value = UUID.randomUUID().toString();
 
         try {

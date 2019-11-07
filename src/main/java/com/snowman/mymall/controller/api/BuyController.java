@@ -1,6 +1,8 @@
 package com.snowman.mymall.controller.api;
 
 import com.snowman.mymall.common.Constant;
+import com.snowman.mymall.common.annotation.CacheLock;
+import com.snowman.mymall.common.annotation.CacheParam;
 import com.snowman.mymall.common.annotation.LoginUser;
 import com.snowman.mymall.common.redis.RedisService;
 import com.snowman.mymall.common.utils.Result;
@@ -33,8 +35,12 @@ public class BuyController {
     private RedisService redisService;
 
     @ApiOperation(value = "商品添加")
+    @CacheLock(prefix = "buy")
     @PostMapping("/add")
-    public Result addBuy(@LoginUser UserVO loginUser, Integer goodsId, Integer productId, Integer number) {
+    public Result addBuy(@CacheParam(name = "loginUser") @LoginUser UserVO loginUser,
+                         @CacheParam(name = "goodsId") Integer goodsId,
+                         @CacheParam(name = "productId")Integer productId,
+                         @CacheParam(name = "number")Integer number) {
         try {
             BuyGoodsVO goodsVo = new BuyGoodsVO();
             goodsVo.setGoodsId(goodsId);

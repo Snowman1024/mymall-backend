@@ -28,6 +28,7 @@ public class ServiceExceptionHandler {
         Result r = new Result();
         r.put("code", e.getCode());
         r.put("msg", e.getMessage());
+        logger.error(e.toString());
         return r;
     }
 
@@ -36,6 +37,7 @@ public class ServiceExceptionHandler {
         Result r = new Result();
         r.put("code", e.getErrno());
         r.put("msg", e.getMessage());
+        logger.error(e.toString());
         return r;
     }
 }

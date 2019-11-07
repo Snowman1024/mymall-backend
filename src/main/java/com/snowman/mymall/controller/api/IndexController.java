@@ -62,7 +62,6 @@ public class IndexController {
      * app首页
      */
     @ApiOperation(value = "新商品信息")
-    @IgnoreAuth
     @PostMapping(value = "/newGoods")
     public Result newGoods() {
         logger.info("首页查询新商品信息controller开始");
@@ -93,7 +92,6 @@ public class IndexController {
      * @return
      */
     @ApiOperation(value = "banner")
-    @IgnoreAuth
     @PostMapping(value = "/banner")
     public Object banner() {
         logger.info("首页查询banner信息controller开始");

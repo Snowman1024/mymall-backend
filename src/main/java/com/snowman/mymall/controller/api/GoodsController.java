@@ -2,6 +2,8 @@ package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.snowman.mymall.common.annotation.CacheLock;
+import com.snowman.mymall.common.annotation.CacheParam;
 import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
 import com.snowman.mymall.common.token.JwtTokenUtil;
@@ -59,7 +61,6 @@ public class GoodsController {
      * 　　人气推荐
      */
     @ApiOperation(value = "人气推荐")
-    @IgnoreAuth
     @PostMapping(value = "/hot")
     public Result hot() {
         Map<String, Object> resultObj = new HashMap();
@@ -86,7 +87,6 @@ public class GoodsController {
             @ApiImplicitParam(name = "brandId", value = "品牌Id", paramType = "path", required = true),
             @ApiImplicitParam(name = "isNew", value = "新商品", paramType = "path", required = true),
             @ApiImplicitParam(name = "isHot", value = "热卖商品", paramType = "path", required = true)})
-    @IgnoreAuth
     @PostMapping(value = "/list")
     public Object list(@LoginUser UserVO loginUser, GoodsVO goodsVO,
                        @RequestParam(value = "page", defaultValue = "1") Integer pageNum,
@@ -165,7 +165,6 @@ public class GoodsController {
      * 商品详情页的大家都在看的商品
      */
     @ApiOperation(value = "商品详情页")
-    @IgnoreAuth
     @PostMapping(value = "/related")
     public Result related(Integer id) {
         logger.info("商品详情页大家都在看的商品controller开始,id:{}", id);
