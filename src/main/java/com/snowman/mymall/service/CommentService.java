@@ -1,5 +1,6 @@
 package com.snowman.mymall.service;
 
+import com.snowman.mymall.common.utils.Result;
 import com.snowman.mymall.vo.CommentVO;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface CommentService {
     public int queryTotal(Integer typeId,Integer valudId);
 
     public List<CommentVO> queryByTypeIdAndValueId(Integer typeId, Integer valudId);
+
+    public int queryHasPicTotal(Integer typeId, Integer valudId);
+
+    public Result list(CommentVO commentVO, Integer pageNum, Integer pageSize);
 }

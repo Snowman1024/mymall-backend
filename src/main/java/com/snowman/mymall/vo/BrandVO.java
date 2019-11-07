@@ -31,12 +31,6 @@ public class BrandVO implements Serializable {
     private Integer isShow;
     //
     private BigDecimal floorPrice;
-    //app显示图片
-    private String appListPicUrl;
     //新品牌
     private Integer isNew;
-    //图片
-    private String newPicUrl;
-    //排序
-    private Integer newSortOrder;
 }

@@ -40,4 +40,8 @@ public class CommentVO implements Serializable {
     private UserVO userInfo;
 
     private List<CommentPictureVO> picList;
+
+    private Integer showType;
+    private String sort;
+    private String order;
 }

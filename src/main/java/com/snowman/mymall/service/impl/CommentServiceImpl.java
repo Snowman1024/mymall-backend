@@ -1,5 +1,6 @@
 package com.snowman.mymall.service.impl;
 
+import com.snowman.mymall.common.utils.Result;
 import com.snowman.mymall.entity.CommentEntity;
 import com.snowman.mymall.repository.CommentRepository;
 import com.snowman.mymall.service.CommentService;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -48,5 +51,66 @@ public class CommentServiceImpl implements CommentService {
             voList.add(vo);
         }
         return voList;
+    }
+
+    /**
+     * 有图的个数
+     * @param typeId
+     * @param valudId
+     * @return
+     */
+    @Override
+    public int queryHasPicTotal(Integer typeId, Integer valudId) {
+        return commentRepository.queryHasPicTotal(typeId, valudId);
+    }
+
+    /**
+     * 查询评论列表
+     * @param commentVO
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public Result list(CommentVO commentVO, Integer pageNum, Integer pageSize){
+
+
+        return null;
+//        Map<String, Object> resultObj = new HashMap();
+//        List<CommentVo> commentList = new ArrayList();
+//        Map param = new HashMap();
+//        param.put("type_id", typeId);
+//        param.put("value_id", valueId);
+//        param.put("page", page);
+//        param.put("limit", size);
+//        if (StringUtils.isNullOrEmpty(sort)) {
+//            param.put("order", "desc");
+//        } else {
+//            param.put("order", sort);
+//        }
+//        if (StringUtils.isNullOrEmpty(order)) {
+//            param.put("sidx", "id");
+//        } else {
+//            param.put("sidx", order);
+//        }
+//        if (null != showType && showType == 1) {
+//            param.put("hasPic", 1);
+//        }
+//        //查询列表数据
+//        Query query = new Query(param);
+//        commentList = commentService.queryList(query);
+//        int total = commentService.queryTotal(query);
+//        ApiPageUtils pageUtil = new ApiPageUtils(commentList, total, query.getLimit(), query.getPage());
+//        //
+//        for (CommentVo commentItem : commentList) {
+//            commentItem.setContent(Base64Util.decode(commentItem.getContent()));
+//            commentItem.setUser_info(userService.queryObject(commentItem.getUser_id()));
+//
+//            Map paramPicture = new HashMap();
+//            paramPicture.put("comment_id", commentItem.getId());
+//            List<CommentPictureVo> commentPictureEntities = commentPictureService.queryList(paramPicture);
+//            commentItem.setPic_list(commentPictureEntities);
+//        }
+//        return toResponsSuccess(pageUtil);
     }
 }

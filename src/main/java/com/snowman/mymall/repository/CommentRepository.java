@@ -26,4 +26,10 @@ public interface CommentRepository extends BaseRepository<CommentEntity, Integer
             " order by c.id desc ")
     List<CommentEntity> queryByTypeIdAndValueId(@Param(value = "typeId") Integer typeId,
                                                 @Param(value = "valueId") Integer valueId);
+
+    @Query(nativeQuery = true,value = "SELECT count(distinct c.id) " +
+            " FROM comment c LEFT JOIN comment_picture cp ON c.id=cp.comment_id " +
+            " WHERE cp.id > 0 AND c.type_id=:typeId AND c.value_id=:valueId AND c.status=1 ")
+    int queryHasPicTotal(@Param(value = "typeId") Integer typeId,
+                         @Param(value = "valueId") Integer valueId);
 }

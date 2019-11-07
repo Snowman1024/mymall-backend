@@ -183,14 +183,14 @@ public class GoodsServiceImpl implements GoodsService {
 
         Object[] objArr = goodsRepository.exeQueryCustNameParm(goodsCountJsql.toString(), queryMap).toArray();
         Long totalCount = (Long) objArr[0];
-        PageUtils goodsData = null;
+        Page goodsData = null;
         if (null != totalCount && totalCount > 0) {
 
             StringBuffer goodsJsql = new StringBuffer("select g ");
             goodsJsql.append((String) goodsConditionMap.get("jsql"));
             List<GoodsEntity> goodsList = goodsRepository.exeQueryCustNameParm(goodsJsql.toString(), queryMap, pageNum, pageSize);
 
-            goodsData = new PageUtils(goodsList, totalCount.intValue(), pageSize, pageNum);
+            goodsData = new Page(goodsList, totalCount.intValue(), pageSize, pageNum);
 
             //搜索到的商品
             for (CategoryVO categoryVO : filterCategory) {

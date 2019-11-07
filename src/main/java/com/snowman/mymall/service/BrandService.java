@@ -1,6 +1,9 @@
 package com.snowman.mymall.service;
 
+import com.snowman.mymall.common.utils.Page;
 import com.snowman.mymall.vo.BrandVO;
+
+import java.util.Map;
 
 /**
  * @Description
@@ -11,4 +14,6 @@ import com.snowman.mymall.vo.BrandVO;
 public interface BrandService {
 
     public BrandVO queryById(Integer id);
+
+    public Page list(Integer pageNum, Integer pageSize);
 }

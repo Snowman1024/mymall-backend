@@ -37,9 +37,6 @@ public class BrandEntity implements Serializable {
     @Column(name = "simple_desc")
     private String simpleDesc;
 
-    //图片
-    @Column(name = "pic_url")
-    private String picUrl;
 
     //排序
     @Column(name = "sort_order",columnDefinition = "smallint")
@@ -53,19 +50,9 @@ public class BrandEntity implements Serializable {
     @Column(name = "floor_price")
     private BigDecimal floorPrice;
 
-    //app显示图片
-    @Column(name = "app_list_pic_url")
-    private String appListPicUrl;
 
     //新品牌
     @Column(name = "is_new",columnDefinition = "smallint")
     private Integer isNew;
 
-    //图片
-    @Column(name = "new_pic_url")
-    private String newPicUrl;
-
-    //排序
-    @Column(name = "new_sort_order",columnDefinition = "smallint")
-    private Integer newSortOrder;
 }
