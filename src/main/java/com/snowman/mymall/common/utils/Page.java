@@ -3,6 +3,7 @@ package com.snowman.mymall.common.utils;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * @Version 1.0
  **/
 @Data
-public class PageUtils implements Serializable {
+public class Page implements Serializable {
 
     //总记录数
     private int count;
@@ -29,6 +30,7 @@ public class PageUtils implements Serializable {
     //扩展
     private Object goodsList;
 
+
     /**
      * 分页
      *
@@ -37,7 +39,7 @@ public class PageUtils implements Serializable {
      * @param numsPerPage 每页记录数
      * @param currentPage 当前页数
      */
-    public PageUtils(List<?> list, int count, int numsPerPage, int currentPage) {
+    public Page(List<?> list, int count, int numsPerPage, int currentPage) {
         this.data = list;
         this.count = count;
         this.numsPerPage = numsPerPage;
@@ -45,10 +47,5 @@ public class PageUtils implements Serializable {
         this.totalPages = (int) Math.ceil((double) count / numsPerPage);
     }
 
-//    public PageUtils(PageInfo pageInfo) {
-//        this.count = (int) pageInfo.getTotal();
-//        this.numsPerPage = pageInfo.getPageSize();
-//        this.currentPage = pageInfo.getPageNum();
-//        this.totalPages = pageInfo.getPages();
-//    }
+
 }

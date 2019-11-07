@@ -12,6 +12,9 @@ import java.security.cert.X509Certificate;
  **/
 public class MyX509TrustManager implements X509TrustManager {
 
+    public MyX509TrustManager() {
+    }
+
     /**
      * 检查客户端证书
      * @param chain

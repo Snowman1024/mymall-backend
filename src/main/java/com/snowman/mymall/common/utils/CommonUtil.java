@@ -28,6 +28,9 @@ public class CommonUtil {
 
     private static Logger log = LoggerFactory.getLogger(CommonUtil.class);
 
+    public CommonUtil() {
+    }
+
     /**
      * 发送https请求
      *

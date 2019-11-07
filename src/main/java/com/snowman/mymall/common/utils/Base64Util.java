@@ -11,6 +11,9 @@ import java.util.Base64;
  **/
 public class Base64Util {
 
+    public Base64Util() {
+    }
+
     /**
      * 加密
      *

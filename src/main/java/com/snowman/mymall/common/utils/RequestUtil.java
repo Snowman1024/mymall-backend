@@ -14,6 +14,8 @@ import java.io.IOException;
  **/
 public class RequestUtil {
 
+    public RequestUtil() {
+    }
 
     public static JSONObject getJsonRequest(HttpServletRequest request) {
         JSONObject result = null;

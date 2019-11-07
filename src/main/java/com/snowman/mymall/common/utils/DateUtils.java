@@ -18,6 +18,8 @@ public class DateUtils {
 
     private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
+    public DateUtils() {
+    }
 
     /**
      * 时间格式(yyyy-MM-dd)

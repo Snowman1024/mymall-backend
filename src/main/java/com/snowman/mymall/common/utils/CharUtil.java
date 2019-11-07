@@ -10,6 +10,9 @@ import java.util.Random;
  **/
 public class CharUtil {
 
+    public CharUtil() {
+    }
+
     /**
      * 获取随机字符串
      *

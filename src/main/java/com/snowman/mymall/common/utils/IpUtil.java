@@ -14,6 +14,9 @@ import java.util.Enumeration;
  **/
 public class IpUtil {
 
+    public IpUtil() {
+    }
+
     public static String getClientIp(HttpServletRequest request) {
         String xff = request.getHeader("X-Real-IP");
         if (xff != null) {

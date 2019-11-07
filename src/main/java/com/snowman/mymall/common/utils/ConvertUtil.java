@@ -5,6 +5,9 @@ import java.util.Date;
 
 public class ConvertUtil {
 
+    public ConvertUtil() {
+    }
+
     public static String toString(Object obj){
         if(null == obj){
             return "";
