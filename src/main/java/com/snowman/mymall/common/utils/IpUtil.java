@@ -33,7 +33,7 @@ public class IpUtil {
      * 获取外网IP
      * @return
      */
-    public static String internetIp() {
+    public static String outerNetIp() {
         try {
 
             Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
@@ -66,7 +66,7 @@ public class IpUtil {
      *
      * @return
      */
-    public static String intranetIp() {
+    public static String interNetIp() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (Exception e) {
@@ -80,7 +80,11 @@ public class IpUtil {
      * @return
      */
     public static String getHost() {
-        return internetIp() == null ? intranetIp() : internetIp();
+        String outerNetIp = outerNetIp();
+        if (null == outerNetIp) {
+            return interNetIp();
+        }
+        return outerNetIp;
     }
 
 }

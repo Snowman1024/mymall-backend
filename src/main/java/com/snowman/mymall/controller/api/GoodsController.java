@@ -2,15 +2,12 @@ package com.snowman.mymall.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.snowman.mymall.common.annotation.CacheLock;
-import com.snowman.mymall.common.annotation.CacheParam;
-import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.annotation.LoginUser;
 import com.snowman.mymall.common.token.JwtTokenUtil;
 import com.snowman.mymall.common.utils.Result;
-import com.snowman.mymall.config.HostInfo;
+import com.snowman.mymall.common.config.HostInfo;
 import com.snowman.mymall.entity.TokenEntity;
-import com.snowman.mymall.interceptor.AuthorizationInterceptor;
+import com.snowman.mymall.common.interceptor.AuthorizationInterceptor;
 import com.snowman.mymall.service.GoodsService;
 import com.snowman.mymall.service.TokenService;
 import com.snowman.mymall.vo.GoodsVO;

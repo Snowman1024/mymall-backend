@@ -2,6 +2,7 @@ package com.snowman.mymall.common.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -92,5 +93,34 @@ public class RedisService<HK, V> {
 
     public boolean expire(String key, long timeout, TimeUnit timeUnit) {
         return redisTemplate.expire(key, timeout, timeUnit);
+    }
+
+    /**
+     * 自增方法
+     *
+     * @param key
+     * @param liveTime
+     * @return
+     */
+    public Long incr(String key, long liveTime) {
+        RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory());
+        Long increment = entityIdCounter.getAndIncrement();
+
+        //初始设置过期时间
+        if ((null == increment || increment.longValue() == 0) && liveTime > 0) {
+            //liveTime为秒数
+            entityIdCounter.expire(liveTime, TimeUnit.SECONDS);
+        }
+        return increment;
+    }
+
+    /**
+     * 自增方法
+     *
+     * @param key
+     * @return
+     */
+    public Long incr(String key) {
+        return incr(key, 0);
     }
 }

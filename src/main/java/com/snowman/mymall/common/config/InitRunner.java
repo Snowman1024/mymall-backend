@@ -1,4 +1,4 @@
-package com.snowman.mymall.config;
+package com.snowman.mymall.common.config;
 
 import com.snowman.mymall.common.Constant;
 import com.snowman.mymall.common.redis.RedisService;

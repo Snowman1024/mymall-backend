@@ -1,4 +1,4 @@
-package com.snowman.mymall.config;
+package com.snowman.mymall.common.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

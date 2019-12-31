@@ -1,4 +1,4 @@
-package com.snowman.mymall.interceptor;
+package com.snowman.mymall.common.interceptor;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 

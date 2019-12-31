@@ -6,9 +6,9 @@ import com.snowman.mymall.common.annotation.IgnoreAuth;
 import com.snowman.mymall.common.utils.IpUtil;
 import com.snowman.mymall.common.utils.RequestUtil;
 import com.snowman.mymall.common.utils.Result;
+import com.snowman.mymall.service.AuthService;
 import com.snowman.mymall.vo.FullUserInfo;
 import com.snowman.mymall.vo.LoginVO;
-import com.snowman.mymall.service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Description
@@ -77,16 +75,16 @@ public class AuthController {
     @ApiOperation(value = "微信登录")
     @IgnoreAuth
     @PostMapping("/login_by_weixin")
-    public Result loginByWeixin( HttpServletRequest request) {
+    public Result loginByWeixin(HttpServletRequest request) {
         logger.info("微信登录controller开始");
 
         JSONObject jsonParam = RequestUtil.getJsonRequest(request);
         String code = jsonParam.getString("code");
         FullUserInfo fullUserInfo = jsonParam.getObject("userInfo", FullUserInfo.class);
-        logger.info("微信登录controller,code:{}",code);
-        logger.info("微信登录controller,fullUserInfo:{}",JSON.toJSONString(fullUserInfo));
+        logger.info("微信登录controller,code:{}", code);
+        logger.info("微信登录controller,fullUserInfo:{}", JSON.toJSONString(fullUserInfo));
 
-        if (StringUtils.isBlank(code)|| null == fullUserInfo) {
+        if (StringUtils.isBlank(code) || null == fullUserInfo) {
             logger.error("微信登录controller参数异常");
             return Result.error("登录失败");
         }
@@ -118,7 +116,7 @@ public class AuthController {
 
         JSONObject jsonParam = RequestUtil.getJsonRequest(request);
         String code = jsonParam.getString("code");
-        logger.info("支付宝登录controller,code:{}",code);
+        logger.info("支付宝登录controller,code:{}", code);
 
         if (StringUtils.isBlank(code)) {
             logger.error("支付宝登录controller参数异常");

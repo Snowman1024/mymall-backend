@@ -1,12 +1,10 @@
-package com.snowman.mymall.interceptor;
+package com.snowman.mymall.common.interceptor;
 
 import com.snowman.mymall.common.annotation.CacheLock;
 import com.snowman.mymall.common.annotation.CacheParam;
-import com.snowman.mymall.interceptor.CacheKeyGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;

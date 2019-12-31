@@ -1,6 +1,7 @@
-package com.snowman.mymall.config;
+package com.snowman.mymall.common.config;
 
-import com.snowman.mymall.interceptor.AuthorizationInterceptor;
+import com.snowman.mymall.common.interceptor.AccessLimitInterceptor;
+import com.snowman.mymall.common.interceptor.AuthorizationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -19,9 +20,13 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private AuthorizationInterceptor authorizationInterceptor;
 
+    @Autowired
+    private AccessLimitInterceptor accessLimitInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authorizationInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(accessLimitInterceptor).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
 

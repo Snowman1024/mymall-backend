@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Description
+ * @Description 缓存锁，可避免重复提交
  * @Author Snowman2014
  * @Date 2019/11/7 10:13
  * @Version 1.0

@@ -1,6 +1,7 @@
 package com.snowman.mymall.controller.api;
 
 import com.snowman.mymall.common.Constant;
+import com.snowman.mymall.common.annotation.AccessLimit;
 import com.snowman.mymall.common.annotation.CacheLock;
 import com.snowman.mymall.common.annotation.CacheParam;
 import com.snowman.mymall.common.annotation.LoginUser;
@@ -36,6 +37,7 @@ public class BuyController {
 
     @ApiOperation(value = "商品添加")
     @CacheLock(prefix = "buy")
+    @AccessLimit(seconds = 10, maxCount = 100, needLogin = false)
     @PostMapping("/add")
     public Result addBuy(@CacheParam(name = "loginUser") @LoginUser UserVO loginUser,
                          @CacheParam(name = "goodsId") Integer goodsId,

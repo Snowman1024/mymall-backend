@@ -1,7 +1,7 @@
-package com.snowman.mymall.resolver;
+package com.snowman.mymall.common.resolver;
 
 import com.snowman.mymall.common.annotation.LoginUser;
-import com.snowman.mymall.interceptor.AuthorizationInterceptor;
+import com.snowman.mymall.common.interceptor.AuthorizationInterceptor;
 import com.snowman.mymall.service.UserService;
 import com.snowman.mymall.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
